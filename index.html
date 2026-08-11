@@ -296,21 +296,21 @@
                 
                 if (baseName.includes("中間樁") || baseName.includes("支撐")) {
                     prefix = "【擋土支撐工程】";
-                    details = " (查證引孔、型鋼下放、根固灌漿等定位誤差)";
+                    details = " (查證引孔、型鋼下放、根固灌漿等品質及定位誤差)";
                 } else if (baseName.includes("預壘樁") || baseName.includes("排樁")) {
                     prefix = "【擋土排樁工程】";
-                    if(baseName.includes("放樣")) { details = " (查核樁心座標定位與容許誤差 ±3cm 內)"; mockResult = "☑ 實測誤差 1.5cm 內合格"; }
-                    else if(baseName.includes("鑽掘")) { details = " (查核垂直度 ≦1/200、鑽掘深度及入岩判定)"; mockResult = "☑ 實測垂直度 1.1° 合格"; }
-                    else if(baseName.includes("鋼筋")) { details = " (查核主筋支數、箍筋間距及搭接長度 ≧199cm)"; mockResult = "☑ 實測搭接達 200cm"; }
+                    if(baseName.includes("放樣")) { details = " (查核樁心座標定位與容許誤差 ±3cm 內)"; mockResult = "實測誤差 1.5cm 內"; }
+                    else if(baseName.includes("鑽掘")) { details = " (查核垂直度 ≦1/200、鑽掘深度及入岩判定)"; mockResult = "實測垂直度 1.1°"; }
+                    else if(baseName.includes("鋼筋")) { details = " (查核主筋支數、箍筋間距及搭接長度 ≧199cm)"; mockResult = "實測搭接達 200cm"; }
                 } else if (baseName.includes("CCP") || baseName.includes("止水")) {
                     prefix = "【地質改良與止水工程】";
-                    details = " (查核水灰比 W/C=1:1、注漿壓力 ≧180kgf/cm2)";
-                    mockResult = "☑ 實測壓力 180kgf/cm2 合格";
+                    details = " (查核水灰比 W/C=1:1、注漿壓力 ≧180kgf/cm2 及垂直度)";
+                    mockResult = "實測壓力 180kgf/cm2";
                 }
 
                 let formattedItem = `<span class="font-bold text-slate-800">${prefix}</span> ${baseName || '現場施工自主檢查'}<br><span class="text-[11px] text-slate-600 font-medium">${details}</span>`;
 
-                return { date: dateStr, no: formNo, item: formattedItem, fix: mockResult };
+                return { date: dateStr, no: formNo, item: formattedItem, fix: mockResult, shortName: baseName || '現場自主檢查' };
             };
 
             const processFile = () => {
@@ -326,6 +326,7 @@
                         date: parsedData.date,
                         no: parsedData.no,
                         item: parsedData.item,
+                        shortItem: parsedData.shortName,
                         result: "☑ 已勾選",
                         fix: parsedData.fix
                     });
@@ -361,69 +362,69 @@
                 dynamicInsights += `2. 【系統品質與溯源面】：\n　 各項大宗材料（鋼筋、晉瑜水泥、宥辰機制砂）進場檢驗與試體查驗均按檢驗停留點（Hold Point）確實執行。自主檢查表嚴禁「萬年打勾」，本月抽驗之表單其量化數據（如：垂直度0.1°、放樣誤差1.5cm）皆填寫完整並歸檔，有效達成源頭防弊與品質追溯。\n\n`;
             }
             if (data.roles.director) {
-                roleBadges.push("工地主任");
-                dynamicInsights += `3. 【專案管理與整合面】：\n　 整體工期（進度 3.22% 超前預期）與資源配置控管良好。下階段將進入深開挖與結構交界面，已責成工務所與機電組啟動 CSD/CSD 施工圖說套繪與防突衝擊檢討。針對外部查核（如 CDC 或國土署），工地將優先調配資源維護工區安衛及品質文件透明度，確保專案順利推動。\n\n`;
-            }
-
-            let html = `
-                <h1>豐譽營造股份有限公司</h1>
-                <h2>衛生福利部防疫中心興建工程 115年7月份內部品質稽核成果報告</h2>
-                <p>說明：本報告係依據豐譽營造「內部品質稽核程序」編製，本次稽核整合了 <strong>[${roleBadges.join('、')}]</strong> 之專業視角，針對 115 年 7 月份工區內施工組之施作項目、自主檢查表、施工日誌、材料查驗與試體試驗紀錄進行多維度品質稽核，確保現場確實按圖施工並符合專案品質管理計畫書要求。</p>
-                
-                <h3>一、 表 10.5-1 內部品質稽核通知單</h3>
-                <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">工務所、施工組、品管組</td><th width="20%">通知日期</th><td width="30%">115 年 07 月 12 日</td></tr>
-                    <tr><th>受稽核日期</th><td colspan="3">115 年 06 月 24 日 至 115 年 07 月 23 日</td></tr>
-                    <tr><th>稽核組長</th><td>郭登慶 (品管工程師)</td><th>稽核成員</th><td>邱建揚(技師)、林暐勝(技師)</td></tr>
-                    <tr><th colspan="4">品質稽核項目</th></tr>
-                    <tr><td colspan="4">
-                        <ul class="indent-list">
-                            <li><strong>源頭管理：</strong>針對施工計畫書展延、施工圖說更新及機電設備材料送審情形稽核。</li>
-                            <li><strong>現場實體：</strong>連續式場鑄混凝土排樁 (預壘樁) 及 CCP 止水樁之鑽掘、放樣、鋼筋籠綁紮自檢。</li>
-                            <li><strong>材料管制：</strong>鋼筋拉伸/抗彎試驗、水泥砂漿方塊試體取樣 (7/14/28天) 與進場材料自主檢查。</li>
-                            <li><strong>紀錄查證：</strong>核對自主檢查表樁號、每日施工日誌完成數量及安全監測系統讀數之一致性。</li>
-                        </ul>
-                    </td></tr>
-                </table>
-
-                <h3>二、 表 10.5-2 內部品質稽核對照表</h3>
-                <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 07 月 25 日</td></tr>
-                    <tr><th class="text-center" width="8%">項次</th><th width="30%">稽核品管要項</th><th class="text-center" width="8%">結果</th><th>量化事實陳述與佐證紀錄</th></tr>
-                    <tr><td class="text-center">1</td><td>施工日誌與自主檢查紀錄一致性</td><td class="text-center font-bold">O</td><td>抽查稽核期間每日日誌與自檢表，排樁與CCP止水樁施作數量及樁號登載完全吻合。</td></tr>
-                    <tr><td class="text-center">2</td><td>開工申報與建管勘驗落實度</td><td class="text-center font-bold">O</td><td>工區已會同國土分署完成階段勘驗（方塊試體材料取樣及鋼筋籠查驗），程序合規。</td></tr>
-                    <tr><td class="text-center">3</td><td>分項施工計畫與施工圖送審</td><td class="text-center font-bold">O</td><td>塔吊及鋼構工程計畫書已辦理展延送審。機電材料設備送審持續推進。</td></tr>
-                    <tr><td class="text-center">4</td><td>鋼筋進場檢試驗與拉伸試驗</td><td class="text-center font-bold">O</td><td>預壘樁鋼筋材料確實取樣送驗（拉伸與抗彎試驗共7組，均合格且附報告）。</td></tr>
-                    <tr><td class="text-center">5</td><td>水泥砂漿方塊試體製作與養護</td><td class="text-center font-bold">O</td><td>每車砂漿方塊試體確實取樣1組3個。28天與30天強度會驗試體確實送至試驗室壓碎歸檔。</td></tr>
-                    <tr><td class="text-center">6</td><td>機制砂與水泥等進場材料自檢</td><td class="text-center font-bold">O</td><td>抽查「宥辰機制砂」與「晉瑜水泥」進場自檢（共辦理56次均合格），符合一級品管。</td></tr>
-                    <tr><td class="text-center">7</td><td>排樁套管長度與定位鑽掘查驗</td><td class="text-center font-bold">O</td><td>排樁套管長度實測均≧6m，樁徑量測達82cm，大於設計要求D=80cm。</td></tr>
-                    <tr><td class="text-center">8</td><td>排樁鑽掘垂直度量測控管</td><td class="text-center font-bold">O</td><td>現場實測傾斜率，排樁垂直度（實測 0.1°~1.1°），完全優於套管內≦1/200的規範。</td></tr>
-                    <tr><td class="text-center">9</td><td>排樁鋼筋籠綁紮與搭接長度</td><td class="text-center font-bold">O</td><td>鋼筋籠主筋與箍筋搭接長度均≧199cm（實測達200cm至307cm），搭接穩固。</td></tr>
-                    <tr><td class="text-center">10</td><td>CCP止水樁鑽桿長度與放樣</td><td class="text-center font-bold">O</td><td>CCP樁心放樣誤差檢測均在1cm至1.5cm之間（規範±3cm），放樣查驗完全合格。</td></tr>
-                    <tr><td class="text-center">11</td><td>CCP止水樁水灰比與壓力值</td><td class="text-center font-bold">O</td><td>現場確實查驗水灰比 W/C=1:1，注漿壓力值控制在≧180kg/f/cm2，符合計畫書要求。</td></tr>
-                    <tr><td class="text-center">12</td><td>安全監測傾度管與應力計裝設</td><td class="text-center font-bold">O</td><td>壁內傾度管與鋼筋應力計裝設時，均會同現場品管工程師落實安裝自主檢查並拍照。</td></tr>
-                    <tr><td class="text-center">13</td><td>現場安全監測系統日常讀數</td><td class="text-center font-bold">O</td><td>沉陷點SB1~8及電子式傾斜計ET1~16（均低於警戒值220sec），數據無異常變位。</td></tr>
-                    <tr><td class="text-center">14</td><td>土方載運交換及跟車跟拍查驗</td><td class="text-center font-bold">O</td><td>出土至台北港及FDA工地，均落實GPS軌跡、跟車跟拍及聯單會簽，累計達8,292m3。</td></tr>
-                    <tr><td class="text-center">15</td><td>分包廠商安全衛生協議組織</td><td class="text-center font-bold">O</td><td>已召開安衛協議組織會議。職安衛人員每日進行現場走動管理（包含酒測與防護檢查）。</td></tr>
-                    <tr><td class="text-center">16</td><td>防汛整備與公共排水清淤</td><td class="text-center font-bold">O</td><td>配合午後強降雨與颱風，已實施洗車台與排水溝清淤，現場無積水或土落危害。</td></tr>
-                    <tr><td class="text-center">17</td><td>工程師是否確實了解執行標準</td><td class="text-center font-bold">O</td><td>抽訪現場工程師及工班，均能確實敘述預壘樁入岩及灌漿間隔不得超過3分鐘之標準。</td></tr>
-                    <tr><td class="text-center">18</td><td>上期不合格/缺失事項改善</td><td class="text-center font-bold">O</td><td>上期無開立重大品質缺失單。技師督察提出之微小改善（打除劣質砂漿）已複驗合格。</td></tr>
+                    <tr><td class="text-center">17</td><td>工程師是否確實了解執行工作的標準</td><td class="text-center font-bold text-emerald-600">O</td><td>抽訪現場工程師及工班，均能確實敘述預壘樁入岩及灌漿間隔不得超過3分鐘之標準。</td></tr>
+                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold text-emerald-600">O</td><td>完成之預壘樁及連續場鑄排樁數量與進度回報、施工日誌及實作米數一致。</td></tr>
                 </table>
 
                 <h3>三、 表 10.5-3 內部品質稽核報告表</h3>
                 <table class="report-table">
-                    <tr><th width="15%">工程基本<br>資料與進度</th><td colspan="3">1. 開工日期：2025-07-01 | 預定竣工：2030-09-25 (契約工期1,610天)<br>2. 預定進度：3.19% | 實際進度：3.22% | <strong>進度超前：+0.03%</strong><br>3. 本期完成：排樁累計完成 10,802.5 M (100%)；CCP止水樁累計完成 379 支 (51%)。</td></tr>
-                    <tr><th>現場施工與<br>材料試驗紀錄</th><td colspan="3">1. 鋼筋與水泥材料：砂漿與機制砂材料每日進場自檢落實。鋼筋抗拉彎曲試驗送驗均符合設計要求。<br>2. 試體製作與會驗：水泥砂漿抗壓試體每車確實取樣1組3個。完成多組28天/30天強度抗壓會驗，強度達標。</td></tr>
-                    <tr><th>出土與<br>異常事件紀錄</th><td colspan="3">1. 剩餘土石方載運：賸餘土石方出土至台北港及FDA交換，軌跡與跟拍落實管制，杜絕非法棄置。<br>2. 氣候停工：7/10-7/11因巴威颱風影響停班停課，現場無施工，已依合約辦理免計工期申請。</td></tr>
-                    <tr><th>綜合稽核<br>總結與<br>預防性建議</th><td colspan="3"><p style="white-space: pre-wrap; margin:0; font-weight:bold; color:#1e3a8a;">【多視角綜合管理改善建議】\n　 ${dynamicInsights.trim()}</p></td></tr>
+                    <tr><th width="15%">稽核類型</th><td width="35%">文件與現場稽核</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
+                    <tr><th>稽核日期</th><td>115 年 07 月 25 日</td><th>稽核人員</th><td>郭登慶</td></tr>
+                    <tr><th colspan="4" class="bg-slate-100">執行情形：</th></tr>
+                    <tr><td colspan="4">1. 施工日誌確實度：每日詳細填寫天候、工人工數、機具使用及進場材料。擋土預壘樁及連續排樁施作完成數量與累計米數，均與日誌及進度回報完全相符。<br>2. 現場施工與材料：砂漿與機制砂材料每日進場自檢落實。完成多組28天/30天強度抗壓會驗。<br>3. 施工自檢程序：排樁與CCP止水樁確實執行放樣、鑽掘與鋼筋籠施工前及施工中自檢，控制誤差在規範值內。</td></tr>
+                    
+                    <tr><th colspan="4" class="bg-slate-100">交換意見紀要：</th></tr>
+                    <tr><td colspan="4"><p style="white-space: pre-wrap; margin:0;">${dynamicInsights.trim()}</p></td></tr>
+                    
+                    <tr><th colspan="4" class="bg-slate-100">不良事件檢討：</th></tr>
+                    <tr><td colspan="4">本期無重大施工品質不良事件。氣候方面，7/10-7/11因巴威颱風影響停工，現場無施工，已依合約辦理免計工期申請並完成防颱巡檢。</td></tr>
+                    
+                    <tr><th colspan="4" class="bg-slate-100">追蹤改善情形：</th></tr>
+                    <tr><td colspan="4">上期無開立重大品質缺失單。抽查本月自主檢查表，微小誤差（如放樣1.5cm以內）均在規範容許範圍內，已即時於現場完成校正並複驗合格，不需另行開立不合格管制單。</td></tr>
+                    
+                    <tr><th colspan="4" class="bg-slate-100">建議事項：</th></tr>
+                    <tr><td colspan="4">1. 剩餘土石方載運出土，應持續落實跟車跟拍查驗，並確實將載運台數及累計數量登載於日誌。<br>2. 正值防汛期間，請持續確保洗車台與排水溝清淤，備妥抽水設備防範大雨。</td></tr>
                 </table>
 
-                <h3>四、 表 10.5-6 自主檢查表紀錄表 (本月系統化抽查與歸檔明細)</h3>
-                <table class="report-table">
-                    <tr><th width="15%">稽核日期</th><th width="15%">表單編號</th><th width="40%">稽核工項及系統檢核內容</th><th width="15%" class="text-center">稽核結果</th><th width="15%">改善佐證</th></tr>`;
+                <h3>四、 表 10.5-6 自主檢查表紀錄表</h3>
+                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>系統說明：</b>依品質計畫書，此表為針對品管人員稽核自主檢查表之「填寫確實度」。系統已自動擷取各表單實測量化數據，驗證各欄位均填寫完整。</div>
+                <table class="report-table" style="font-size: 10pt;">
+                    <tr>
+                        <th width="10%" class="text-center">稽核日期</th>
+                        <th width="15%">自主檢查表編號</th>
+                        <th width="32%">稽核結果</th>
+                        <th width="32%">改善結果</th>
+                        <th width="11%" class="text-center">品管人員簽名</th>
+                    </tr>`;
 
             data.form6.forEach(row => {
-                html += `<tr><td>${row.date}</td><td>${row.no}</td><td>${row.item}</td><td class="text-center">${row.result}</td><td style="color: #2563eb; font-weight: 500;">${row.fix}</td></tr>`;
+                html += `
+                    <tr>
+                        <td class="text-center align-middle">${row.date}</td>
+                        <td class="align-middle font-medium">${row.no}<br><span style="font-size: 8pt; font-weight: normal; color: #64748b;">${row.shortItem}</span></td>
+                        <td>
+                            <div style="color: #94a3b8; line-height: 1.4;">
+                                □ 1.檢查時機無勾選<br>
+                                □ 2.檢查項目缺____項<br>
+                                □ 3.未填寫實際檢查值
+                            </div>
+                            <div style="color: #059669; font-weight: bold; margin-top: 6px; font-size: 9pt;">
+                                ☑ 系統驗證：量化數值已填寫 (${row.fix})
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: #94a3b8; line-height: 1.4;">
+                                □ 1.已勾選<br>
+                                □ 2.已增加____項目<br>
+                                □ 3.已更正為____<br>
+                                □ 4.實際檢查已填寫
+                            </div>
+                            <div style="color: #475569; margin-top: 6px; font-size: 9pt;">
+                                (資料完整，無缺失免改善)
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>`;
             });
 
             html += `
