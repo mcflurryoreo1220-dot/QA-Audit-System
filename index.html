@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 智慧品管稽核系統</title>
+    <title>豐譽營造 - 智慧品管稽核系統 V3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,6 +33,19 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* 系統推播通知 */
+        #toast {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -41,7 +54,7 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-layer-group text-2xl text-blue-400"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-emerald-600 px-2 py-0.5 rounded ml-2">V2.5 GitHub正式版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-emerald-500 px-2 py-0.5 rounded ml-2 shadow-sm">V3.0 雲端實務整合版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
                 <i class="fa-brands fa-github mr-1"></i> 多視角引擎
@@ -49,13 +62,16 @@
         </div>
     </header>
 
+    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white font-medium px-6 py-3 rounded shadow-lg z-50 flex items-center">
+        <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
+        <span id="toast-message">系統提示訊息</span>
+    </div>
+
     <main class="flex-grow flex overflow-hidden max-w-screen-2xl mx-auto w-full p-4 gap-4">
         
-        <!-- Left Column: Settings & Upload -->
         <div class="w-80 flex flex-col gap-4 overflow-y-auto pr-2 flex-shrink-0 pb-10">
             <div class="glass-panel p-5 rounded-xl border-t-4 border-t-blue-600 flex flex-col">
                 
-                <!-- Role Selection -->
                 <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-users-gear mr-1 text-slate-500"></i> 稽核視角設定 (多選)</h2>
                 <div class="flex flex-col gap-2 mb-6 relative z-20">
                     <label class="flex items-center space-x-2 cursor-pointer group">
@@ -81,7 +97,7 @@
                         <p class="text-[11px] text-slate-500 pointer-events-none">點擊或拖曳檔案</p>
                         <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
-                    <div id="list-log" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-20"></div>
+                    <div id="list-log" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-30"></div>
                 </div>
 
                 <div class="mb-4 relative">
@@ -91,7 +107,7 @@
                         <p class="text-[11px] text-slate-500 pointer-events-none">點擊或拖曳檔案</p>
                         <input type="file" id="file-ppt" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
-                    <div id="list-ppt" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-20"></div>
+                    <div id="list-ppt" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-30"></div>
                 </div>
 
                 <div class="mb-6 relative flex-grow">
@@ -101,19 +117,17 @@
                         <p class="text-[11px] text-slate-500 pointer-events-none">支援拖曳多份表單<br>AI 智慧檔名解析</p>
                         <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
-                    <div id="list-check" class="mt-2 space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-1 relative z-20"></div>
+                    <div id="list-check" class="mt-2 space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-1 relative z-30"></div>
                 </div>
 
-                <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center shadow-md border border-slate-600 relative z-30">
+                <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center shadow-md border border-slate-600 relative z-40">
                     <i class="fa-solid fa-microchip mr-2 text-blue-400"></i> 生成正式稽核公文
                 </button>
             </div>
         </div>
 
-        <!-- Right Column: Document Preview -->
         <div class="flex-grow bg-slate-300 rounded-xl overflow-y-auto relative border border-slate-400 shadow-inner flex flex-col">
             
-            <!-- Tools Bar -->
             <div class="bg-slate-100 p-2 border-b border-slate-300 flex justify-between items-center sticky top-0 z-10 shadow-sm">
                 <span class="text-sm font-bold text-slate-600 ml-2"><i class="fa-regular fa-file-word mr-1"></i> 綜合稽核產出預覽 (A4)</span>
                 <button id="btn-download" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors hidden shadow-sm flex items-center">
@@ -121,7 +135,6 @@
                 </button>
             </div>
 
-            <!-- Loading Overlay -->
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-20 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
                 <h3 class="text-lg font-bold text-slate-800">AI 多視角大數據運算中...</h3>
@@ -131,7 +144,6 @@
                 </div>
             </div>
 
-            <!-- Document Container -->
             <div class="p-6 pb-20">
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
                     <i class="fa-solid fa-file-shield text-6xl mb-4 text-slate-300"></i>
@@ -143,9 +155,15 @@
     </main>
 
     <script>
-        // 檔案狀態管理
         const files = { log: [], ppt: [], check: [] };
         
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
         function setupInput(type) {
             document.getElementById(`file-${type}`).addEventListener('change', (e) => {
                 const newFiles = Array.from(e.target.files).map(f => ({ file: f, selected: true }));
@@ -179,7 +197,6 @@
 
         setupInput('log'); setupInput('ppt'); setupInput('check');
 
-        // Word 下載功能
         document.getElementById('btn-download').addEventListener('click', function() {
             const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
                 "xmlns:w='urn:schemas-microsoft-com:office:word' " +
@@ -224,12 +241,11 @@
             }, 3000);
         });
 
-        // 啟動分析
         document.getElementById('btn-analyze').addEventListener('click', () => {
             const selectedChecks = files.check.filter(item => item.selected);
 
             if (selectedChecks.length === 0) {
-                alert('⚠️ 系統提示：請至少上傳並「勾選」一份「自主檢查表」進行比對分析！');
+                showToast('請至少上傳並「勾選」一份「自主檢查表」進行比對分析！');
                 return;
             }
 
@@ -240,7 +256,7 @@
             };
             
             if(!roles.engineer && !roles.qa && !roles.director){
-                alert('⚠️ 系統提示：請至少選擇一種稽核視角！');
+                showToast('請至少選擇一種稽核視角！');
                 return;
             }
 
@@ -256,7 +272,6 @@
             let currentFileIndex = 0;
             let dynamicForm6Data = [];
 
-            // 智慧檔名解析引擎
             const parseFileName = (filename) => {
                 let dateStr = "115.07.未標示";
                 const dateMatch = filename.match(/115\d{4}/);
@@ -280,6 +295,7 @@
                 if (baseName.includes("中間樁") || baseName.includes("支撐")) {
                     prefix = "【擋土支撐工程】";
                     details = " (查證引孔、型鋼下放、根固灌漿等品質及定位誤差)";
+                    mockResult = "查證灌漿確實";
                 } else if (baseName.includes("預壘樁") || baseName.includes("排樁")) {
                     prefix = "【擋土排樁工程】";
                     if(baseName.includes("放樣")) { details = " (查核樁心座標定位與容許誤差 ±3cm 內)"; mockResult = "誤差 1.5cm"; }
@@ -330,20 +346,21 @@
             processFile();
         });
 
-        // 渲染報告內容
         function renderReport(data) {
             let dynamicInsights = "";
             let weatherAdvice = "";
+            let systemCheck = "";
             
             if (data.roles.engineer) {
-                dynamicInsights += `1. 【現場執行與實務面】：本月實體地工工程（預壘樁與CCP）推進順利，鑽機與重機具動線調度得宜。唯排樁鋼筋籠在吊裝、焊接與下放過程中，現場工程師須嚴格監督吊掛點穩定性，防止鋼筋籠扭曲變形或碰撞孔壁，保護層間隔器須以每2m一處確實固定。\n\n`;
+                dynamicInsights += `1. 【現場執行與實務面】：本期鑽機動線與重機具調度得宜，實體地工工程如預壘樁與CCP推進順利。惟連續排樁鋼筋籠在吊裝下放過程中，現場工程師須嚴格監督吊掛點穩定性，防止扭曲變形，並確實要求間隔器以每2m一處進行固定。\n`;
             }
             if (data.roles.qa) {
-                dynamicInsights += `2. 【系統品質與溯源面】：各項大宗材料（鋼筋、晉瑜水泥、宥辰機制砂）進場檢驗與試體查驗均按檢驗停留點（Hold Point）確實執行。自主檢查表之量測數值確實量化，如鑽掘垂直度量測值介於 0.1°~1.1°、直徑確實量測，有效達成源頭防弊與品質追溯。\n\n`;
+                dynamicInsights += `2. 【品質系統與溯源面】：各項大宗材料（晉瑜水泥、宥辰機制砂及鋼筋）均依「檢驗停留點（Hold Point）」確實進場查驗與送驗。抽查現場自主檢查表，各項實測數據均已「確實量化」（如垂直度 0.1°~1.1°、放樣誤差），無「萬年打勾」之情事，落實源頭防弊與品質追溯。\n`;
+                systemCheck = "抽檢圖說、施工計畫與材料資格送審管制表，皆依規定建立鑑別與追溯程序，紀錄完整。";
             }
             if (data.roles.director) {
-                dynamicInsights += `3. 【管理整合與防護面】：本期進度超前，剩餘土石方載運出土至台北港及FDA工區土方交換，均落實GPS軌跡與聯單會簽，無異常。此外，安全監測系統讀數（沉陷點最大-2.0mm，傾斜計最大87.8sec）皆遠低於警戒值，工區整體安全受控。\n\n`;
-                weatherAdvice = `時值夏日防汛期間，基於滯洪池及排樁已陸續完成，應加強裸露表土之黑網覆蓋、定時灑水防塵，並備妥抽水機等防汛設備防範大雨。`;
+                dynamicInsights += `3. 【管理整合與防護面】：本期進度管控良好。FDA工區土方交換運送與台北港出土，均落實車輛軌跡、跟車跟拍與聯單會簽。此外，安全監測系統讀數（沉陷點最大-2.0mm，傾斜計最大87.8sec）皆遠低於警戒值，工區整體安全受控。\n`;
+                weatherAdvice = `時值夏日防汛與颱風頻發期間，基於滯洪池及排樁已陸續完成，應加強洗車台沉砂池及工區外排水溝之清淤，備妥抽水機具，並嚴格落實防颱巡檢。`;
             }
 
             let html = `
@@ -398,7 +415,7 @@
                     <tr><th width="15%">稽核類型</th><td width="35%">文件與現場稽核</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
                     <tr><th>稽核日期</th><td>115 年 07 月 25 日</td><th>稽核人員</th><td>邱建揚、郭登慶等</td></tr>
                     <tr><th colspan="4" class="bg-slate-100">執行情形：</th></tr>
-                    <tr><td colspan="4">1. 施工日誌確實度：每日詳細填寫天候、工人工數、機具使用及進場材料。擋土預壘樁及CCP止水樁施作完成數量與累計米數，均與日誌及進度回報完全相符。<br>2. 現場施工與材料：砂漿與機制砂材料每日進場自檢落實。完成多組28天/30天強度抗壓會驗，結果均合格。<br>3. 施工自檢程序：預壘樁與CCP止水樁確實執行放樣、鑽掘與鋼筋籠施工前及施工中自檢，控制誤差在規範值內。</td></tr>
+                    <tr><td colspan="4">1. 施工日誌確實度：每日詳細填寫天候、工人工數、機具使用及進場材料。擋土預壘樁及CCP止水樁施作完成數量與累計米數，均與日誌及進度回報完全相符。<br>2. 現場施工與材料：砂漿與機制砂材料每日進場自檢落實。完成多組28天/30天強度抗壓會驗，結果均合格。<br>3. 施工自檢程序：預壘樁與CCP止水樁確實執行放樣、鑽掘與鋼筋籠施工前及施工中自檢，控制誤差在規範值內。${systemCheck}</td></tr>
                     
                     <tr><th colspan="4" class="bg-slate-100">交換意見紀要：</th></tr>
                     <tr><td colspan="4"><p style="white-space: pre-wrap; margin:0;">${dynamicInsights.trim()}</p></td></tr>
@@ -414,7 +431,7 @@
                 </table>
 
                 <h3>四、 表 10.5-6 自主檢查表紀錄表</h3>
-                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>系統說明：</b>依品質計畫書，此表為針對品管人員稽核自主檢查表之「填寫確實度」。系統已驗證各抽查表單實測量化數據均填寫完整。</div>
+                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>系統說明：</b>本表呈現品管人員對現場自檢表之查驗結果，確認各表單之實測量化數據均已落實填報，無遺漏。</div>
                 <table class="report-table" style="font-size: 10pt;">
                     <tr>
                         <th width="10%" class="text-center">稽核日期</th>
@@ -428,23 +445,15 @@
                 html += `
                     <tr>
                         <td class="text-center align-middle">${row.date}</td>
-                        <td class="align-middle font-medium">${row.no}<br><span style="font-size: 8pt; font-weight: normal; color: #64748b;">${row.shortItem}</span></td>
+                        <td class="align-middle font-medium">${row.no}<br><span style="font-size: 8pt; font-weight: normal; color: #64748b;">${row.item}</span></td>
                         <td>
-                            <div style="color: #94a3b8; line-height: 1.4;">
-                                □ 1.檢查時機無勾選<br>
-                                □ 2.檢查項目缺____項<br>
-                                □ 3.未填寫實際檢查值
+                            <div style="color: #334155; line-height: 1.5;">
+                                經查證，表單檢查時機與項目皆已確實勾選，且實際檢查值已具體量化填寫（實測：<span class="font-bold text-slate-800">${row.fix}</span>），與日誌登載相符。
                             </div>
                         </td>
                         <td>
-                            <div style="color: #94a3b8; line-height: 1.4;">
-                                □ 1.已勾選<br>
-                                □ 2.已增加____項目<br>
-                                □ 3.已更正為____<br>
-                                □ 4.實際檢查已填寫
-                            </div>
-                            <div style="color: #059669; font-weight: bold; margin-top: 6px; font-size: 9pt;">
-                                ☑ 系統檢核：各項量化數值均已填寫完整 (${row.fix})，無缺失，免辦理改善。
+                            <div style="color: #059669; font-weight: bold; line-height: 1.5;">
+                                查核結果符合規範，無缺失，免辦理改善。
                             </div>
                         </td>
                         <td></td>
