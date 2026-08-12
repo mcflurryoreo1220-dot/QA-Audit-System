@@ -3,81 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽智慧品管系統 V3.0</title>
+    <title>豐譽智慧品管系統 V3.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: '微軟正黑體', sans-serif; background-color: #f3f4f6; }
         .upload-area { border: 2px dashed #9ca3af; transition: all 0.3s ease; }
-        .upload-area:hover { border-color: #3b82f6; background-color: #eff6ff; }
+        .upload-area.dragover { border-color: #3b82f6; background-color: #eff6ff; }
         .report-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 2rem; background-color: white; }
         .report-table th, .report-table td { border: 1px solid #374151; padding: 0.5rem; text-align: left; font-size: 0.9rem; }
         .report-table th { background-color: #f3f4f6; font-weight: bold; }
         .page-break { page-break-before: always; }
+        /* 自訂滾動條 */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     </style>
 </head>
 <body class="p-6">
     <div class="max-w-7xl mx-auto flex gap-6">
         
         <!-- 左側：控制面板 -->
-        <div class="w-1/3 bg-white p-6 rounded-xl shadow-lg flex flex-col gap-6">
+        <div class="w-1/3 bg-white p-6 rounded-xl shadow-lg flex flex-col gap-5 h-[90vh] overflow-y-auto custom-scroll">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    🌟 豐譽智慧品管 <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">V3.0</span>
+                    🌟 豐譽智慧品管 <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">V3.5 分類版</span>
                 </h1>
-                <p class="text-sm text-gray-500 mt-2">將自主檢查表、日誌拖曳至下方，並勾選稽核視角。</p>
+                <p class="text-sm text-gray-500 mt-2">將資料拖曳至下方，系統將自動分類。</p>
             </div>
 
             <!-- 視角選擇區 -->
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 class="font-bold text-gray-700 mb-3">👤 請勾選本次稽核視角：</h3>
+                <h3 class="font-bold text-gray-700 mb-3">👤 稽核視角設定：</h3>
                 <div class="flex flex-col gap-2">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="role-field" class="w-4 h-4 text-blue-600 rounded" checked>
-                        <span class="text-sm font-medium text-gray-700">現場工程師 (著重執行與實測數據)</span>
+                        <span class="text-sm font-medium text-gray-700">現場工程師 (著重執行與實測)</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="role-qc" class="w-4 h-4 text-blue-600 rounded" checked>
-                        <span class="text-sm font-medium text-gray-700">品管工程師 (著重合規與文件溯源)</span>
+                        <span class="text-sm font-medium text-gray-700">品管工程師 (著重合規與溯源)</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="role-director" class="w-4 h-4 text-blue-600 rounded" checked>
-                        <span class="text-sm font-medium text-gray-700">工地主任 (著重宏觀管理與風險預防)</span>
+                        <span class="text-sm font-medium text-gray-700">工地主任 (著重管理與預防)</span>
                     </label>
                 </div>
             </div>
 
-            <!-- 檔案上傳區 -->
-            <div class="relative upload-area rounded-xl p-8 text-center bg-gray-50">
-                <input type="file" id="file-upload" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-0" accept=".pdf,.png,.jpg,.jpeg">
-                <div class="text-gray-500 relative z-0">
-                    <svg class="mx-auto h-12 w-12 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                    <p class="font-medium">點擊或拖曳檔案至此</p>
-                    <p class="text-xs mt-1">支援 PDF, JPG, PNG (可多選)</p>
+            <!-- 拖曳上傳區 (修復拖曳與點擊功能) -->
+            <div id="drop-zone" class="relative upload-area rounded-xl p-6 text-center bg-gray-50 cursor-pointer" onclick="document.getElementById('file-upload').click()">
+                <input type="file" id="file-upload" multiple class="hidden" accept=".pdf,.png,.jpg,.jpeg">
+                <div class="text-gray-500 pointer-events-none">
+                    <svg class="mx-auto h-10 w-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <p class="font-medium text-sm">點擊或拖曳檔案至此</p>
                 </div>
             </div>
 
-            <!-- 檔案清單區 (加入 z-10 確保按鈕可點擊) -->
-            <div id="file-list" class="flex flex-col gap-2 max-h-48 overflow-y-auto relative z-10">
-                <!-- 動態生成檔案清單 -->
+            <!-- 分類檔案清單區 -->
+            <div class="flex flex-col gap-4">
+                <!-- 施工日誌區 -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-700 border-b pb-1 mb-2 flex items-center gap-1">
+                        📄 施工日誌 <span id="count-log" class="text-xs bg-gray-200 text-gray-700 px-2 rounded-full">0</span>
+                    </h4>
+                    <div id="list-log" class="flex flex-col gap-2 max-h-32 overflow-y-auto custom-scroll"></div>
+                </div>
+                
+                <!-- 月會簡報區 -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-700 border-b pb-1 mb-2 flex items-center gap-1">
+                        📊 月會簡報 <span id="count-ppt" class="text-xs bg-gray-200 text-gray-700 px-2 rounded-full">0</span>
+                    </h4>
+                    <div id="list-ppt" class="flex flex-col gap-2 max-h-32 overflow-y-auto custom-scroll"></div>
+                </div>
+
+                <!-- 自主檢查表區 -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-700 border-b pb-1 mb-2 flex items-center gap-1">
+                        📋 自主檢查表 <span id="count-checklist" class="text-xs bg-gray-200 text-gray-700 px-2 rounded-full">0</span>
+                    </h4>
+                    <div id="list-checklist" class="flex flex-col gap-2 max-h-48 overflow-y-auto custom-scroll"></div>
+                </div>
             </div>
 
-            <button onclick="startAnalysis()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow hover:bg-blue-700 transition">
-                🚀 啟動 AI 智慧稽核
+            <button onclick="startAnalysis()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow hover:bg-blue-700 transition mt-auto">
+                🚀 啟動完整公文分析
             </button>
         </div>
 
         <!-- 右側：報告產出區 -->
-        <div class="w-2/3 bg-white p-8 rounded-xl shadow-lg relative">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
+        <div class="w-2/3 bg-white p-8 rounded-xl shadow-lg relative h-[90vh] overflow-y-auto custom-scroll">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 sticky top-0 bg-white z-20">
                 <h2 class="text-xl font-bold text-gray-800">📄 內部品質稽核成果報告</h2>
                 <button onclick="exportToWord()" id="export-btn" class="hidden bg-purple-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-purple-700 transition">
-                    📥 一鍵匯出 Word 報表
+                    📥 匯出完整 Word (合規版)
                 </button>
             </div>
             
             <div id="loading" class="hidden flex flex-col items-center justify-center py-20">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-                <p class="text-gray-600 font-medium" id="loading-text">AI 正在深度解析資料中...</p>
+                <p class="text-gray-600 font-medium" id="loading-text">AI 正在深度解析與比對資料中...</p>
             </div>
 
             <div id="report-content" class="hidden text-black bg-white" style="font-family: '標楷體', 'MingLiU', serif;">
@@ -87,56 +111,105 @@
     </div>
 
     <script>
-        let uploadedFiles = [];
+        let fileDatabase = [];
+        let fileIdCounter = 0;
 
-        // 監聽檔案上傳
-        document.getElementById('file-upload').addEventListener('change', function(e) {
-            const files = e.target.files;
-            for (let i = 0; i < files.length; i++) {
-                uploadedFiles.push({
-                    name: files[i].name,
-                    active: true,
-                    file: files[i]
-                });
-            }
-            renderFileList();
+        // --- 拖曳上傳邏輯 ---
+        const dropZone = document.getElementById('drop-zone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
         });
 
-        // 渲染檔案清單
-        function renderFileList() {
-            const list = document.getElementById('file-list');
-            list.innerHTML = '';
-            uploadedFiles.forEach((file, index) => {
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        document.getElementById('file-upload').addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+            e.target.value = ''; // 重置 input 以允許重複上傳同檔名
+        });
+
+        // --- 檔案處理與分類邏輯 ---
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let type = 'checklist'; // 預設為自檢表
+                
+                if (file.name.includes('日誌')) {
+                    type = 'log';
+                } else if (file.name.includes('簡報') || file.name.includes('月會')) {
+                    type = 'ppt';
+                }
+
+                fileDatabase.push({
+                    id: fileIdCounter++,
+                    name: file.name,
+                    type: type,
+                    active: true,
+                    fileObj: file
+                });
+            }
+            renderAllLists();
+        }
+
+        function renderAllLists() {
+            renderList('log', 'list-log', 'count-log');
+            renderList('ppt', 'list-ppt', 'count-ppt');
+            renderList('checklist', 'list-checklist', 'count-checklist');
+        }
+
+        function renderList(type, containerId, countId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const filteredFiles = fileDatabase.filter(f => f.type === type);
+            document.getElementById(countId).innerText = filteredFiles.length;
+
+            filteredFiles.forEach(file => {
                 const item = document.createElement('div');
-                item.className = `flex items-center justify-between p-2 rounded border ${file.active ? 'bg-blue-50 border-blue-200' : 'bg-gray-100 border-gray-200 opacity-60'}`;
+                item.className = `flex items-center justify-between p-2 rounded border text-sm ${file.active ? 'bg-blue-50 border-blue-200' : 'bg-gray-100 border-gray-200 opacity-60'}`;
                 item.innerHTML = `
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <input type="checkbox" ${file.active ? 'checked' : ''} onchange="toggleFile(${index})" class="w-4 h-4 text-blue-600 cursor-pointer">
-                        <span class="text-sm truncate" title="${file.name}">${file.name}</span>
+                    <div class="flex items-center gap-2 overflow-hidden w-full">
+                        <input type="checkbox" ${file.active ? 'checked' : ''} onchange="toggleFile(${file.id})" class="w-4 h-4 text-blue-600 cursor-pointer flex-shrink-0">
+                        <span class="truncate w-full" title="${file.name}">${file.name}</span>
                     </div>
-                    <button onclick="deleteFile(${index})" class="text-red-500 hover:text-red-700 p-1 cursor-pointer">
+                    <button onclick="deleteFile(${file.id})" class="text-red-500 hover:text-red-700 p-1 cursor-pointer flex-shrink-0 ml-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 `;
-                list.appendChild(item);
+                container.appendChild(item);
             });
+            
+            if(filteredFiles.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 p-2 text-center border border-dashed rounded">暫無檔案</div>';
+            }
         }
 
-        function toggleFile(index) {
-            uploadedFiles[index].active = !uploadedFiles[index].active;
-            renderFileList();
+        function toggleFile(id) {
+            const file = fileDatabase.find(f => f.id === id);
+            if(file) file.active = !file.active;
+            renderAllLists();
         }
 
-        function deleteFile(index) {
-            uploadedFiles.splice(index, 1);
-            renderFileList();
+        function deleteFile(id) {
+            fileDatabase = fileDatabase.filter(f => f.id !== id);
+            renderAllLists();
         }
 
-        // 模擬 AI 處理並產出報告
+        // --- 報告產出邏輯 (合規版) ---
         function startAnalysis() {
-            const activeFiles = uploadedFiles.filter(f => f.active);
+            const activeFiles = fileDatabase.filter(f => f.active);
             if (activeFiles.length === 0) {
-                alert('請至少勾選一份有效檔案進行分析！');
+                alert('請至少保留一份有效檔案進行分析！');
                 return;
             }
 
@@ -145,11 +218,11 @@
             document.getElementById('loading').classList.remove('hidden');
 
             setTimeout(() => {
-                generateFullReport(activeFiles);
+                generateComplianceReport(activeFiles);
             }, 1500);
         }
 
-        function generateFullReport(files) {
+        function generateComplianceReport(activeFiles) {
             document.getElementById('loading').classList.add('hidden');
             const reportDiv = document.getElementById('report-content');
             
@@ -158,68 +231,75 @@
             const hasQC = document.getElementById('role-qc').checked;
             const hasDirector = document.getElementById('role-director').checked;
 
+            // 分類統計
+            const activeLogs = activeFiles.filter(f => f.type === 'log');
+            const activePpts = activeFiles.filter(f => f.type === 'ppt');
+            const activeChecklists = activeFiles.filter(f => f.type === 'checklist');
+
             // 取得今日日期
             const today = new Date();
             const rocYear = today.getFullYear() - 1911;
             const dateStr = `${rocYear} 年 ${String(today.getMonth() + 1).padStart(2, '0')} 月 ${String(today.getDate()).padStart(2, '0')} 日`;
+            const auditNo = `IA-${rocYear}${String(today.getMonth() + 1).padStart(2, '0')}-01`;
 
-            // 動態分析檔案資料
+            // 產出表 10.5-6 的列
             let table1056HTML = '';
-            let formsAnalyzed = 0;
-
-            files.forEach((file, index) => {
-                let formNo = `現場專案抽查`;
-                let auditResult = `經查證，表單檢查時機與項目皆已確實勾選，實際檢查值已具體量化填寫，與日誌登載相符。`;
-                
-                const match = file.name.match(/EA54-\d{3}/);
-                if(match) formNo = match[0];
-                
-                if (file.name.includes('日誌') || file.name.includes('簡報')) return; // 表10.5-6僅列自檢表
-                
-                formsAnalyzed++;
-                table1056HTML += `
-                    <tr>
-                        <td style="text-align: center;">${dateStr}</td>
-                        <td style="text-align: center;">${formNo}</td>
-                        <td>${auditResult}<br>*(系統驗證: ${file.name})*</td>
-                        <td>查核結果符合規範，無缺失，免辦理改善。</td>
-                        <td style="text-align: center;">(系統查核)</td>
-                    </tr>
-                `;
-            });
-
-            if(formsAnalyzed === 0) {
-                 table1056HTML = `<tr><td colspan="5" style="text-align: center;">本次稽核未包含自主檢查表。</td></tr>`;
+            if (activeChecklists.length > 0) {
+                activeChecklists.forEach((file) => {
+                    let formNo = `現場專案抽查`;
+                    const match = file.name.match(/EA54-\d{3}/);
+                    if(match) formNo = match[0];
+                    
+                    let auditResult = `經查證，表單檢查時機與項目皆已確實勾選，實際檢查值已具體量化填寫，與日誌登載相符。<br>*(系統驗證: ${file.name})*`;
+                    
+                    table1056HTML += `
+                        <tr>
+                            <td style="text-align: center;">${dateStr}</td>
+                            <td style="text-align: center;">${formNo}</td>
+                            <td>${auditResult}</td>
+                            <td>查核結果符合規範，無缺失，免辦理改善。</td>
+                            <td style="text-align: center;">(系統查核)</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                table1056HTML = `<tr><td colspan="5" style="text-align: center;">本次稽核未包含自主檢查表。</td></tr>`;
             }
 
             // 動態生成主任/品管/現場意見
             let opinions = [];
-            if(hasField) opinions.push("現場實務：機具調度與實測數據皆符合施工計畫，天候防護措施已落實於日誌中。");
-            if(hasQC) opinions.push("品質系統：進場材料檢驗頻率皆符合合約，各項檢驗停留點(Hold Point)查驗合格，文件歸檔完備。");
-            if(hasDirector) opinions.push("高階管理：整體進度微幅超前，後續需注意跨組別介面整合，並持續落實安衛巡檢及防汛演練。");
-            const combinedOpinion = opinions.join("<br>");
+            if(hasField) opinions.push("【現場實務】：機具調度與實測數據皆符合施工計畫，天候防護措施已落實於日誌中。");
+            if(hasQC) opinions.push("【品質系統】：進場材料檢驗頻率皆符合合約，各項檢驗停留點查驗合格，文件歸檔完備。");
+            if(hasDirector) opinions.push("【高階管理】：整體進度微幅超前，後續需注意跨組別介面整合，並持續落實安衛巡檢及防汛演練。");
+            const combinedOpinion = opinions.join("<br><br>");
 
+            // 事實陳述 (動態帶入數量)
+            const stmtScope = `針對本次上傳之 ${activeLogs.length} 份施工日誌、${activePpts.length} 份月會簡報與 ${activeChecklists.length} 份自主檢查表進行數位交叉比對稽核。`;
+            const stmtLog = activeLogs.length > 0 ? `經查核 ${activeLogs.length} 份日誌，進度與自檢表施作日期完全吻合。` : `本次未抽查日誌。`;
+            
             const reportHTML = `
+                <!-- 表 10.5-1 -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">表 10.5-1 內部品質稽核通知單</h3>
                 </div>
                 <table class="report-table">
                     <tr><td width="20%">受稽核單位</td><td width="30%">施工組</td><td width="20%">通知日期</td><td width="30%">${dateStr}</td></tr>
-                    <tr><td>受稽核日期</td><td colspan="3">${dateStr}</td></tr>
+                    <tr><td>受稽核日期</td><td>${dateStr}</td><td>稽核編號</td><td>${auditNo}</td></tr>
                     <tr><td>稽核組長</td><td>系統自動派任</td><td>稽核組員</td><td>(無)</td></tr>
                     <tr><td colspan="4"><b>品質稽核項目：</b><br>1. 施工單位自主檢查紀錄查證。<br>2. 施工日誌確實度查核。<br>3. 相關品管文件與圖說比對。</td></tr>
                     <tr><td colspan="4"><b>備註：</b>本次採用豐譽智慧品管系統進行雲端數位稽核。</td></tr>
                 </table>
                 <div class="page-break"></div>
 
+                <!-- 表 10.5-2 -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">表 10.5-2 內部品質稽核查對表</h3>
                 </div>
                 <table class="report-table">
                     <tr><td width="20%">受稽核單位</td><td width="30%">施工組</td><td width="20%">稽核日期</td><td width="30%">${dateStr}</td></tr>
-                    <tr><td>要項敘述</td><td colspan="3">針對本次上傳之 ${files.length} 份文件進行數位解析與比對稽核。</td></tr>
+                    <tr><td>要項敘述</td><td colspan="3">${stmtScope}</td></tr>
                     <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
                         <td width="5%">項次</td><td width="35%">稽核細項</td><td width="15%">稽核結果</td><td width="45%">事實陳述</td>
                     </tr>
@@ -235,17 +315,18 @@
                     <tr><td style="text-align: center;">10</td><td>缺失複查是否有檢附改善前中後相片?</td><td style="text-align: center;">-</td><td>本次無須辦理缺失複查。</td></tr>
                     <tr><td style="text-align: center;">11</td><td>施工材料品質自主檢查紀錄文件是否分類、登錄、歸檔</td><td style="text-align: center;">○符合</td><td>數位檔案已完整分類。</td></tr>
                     <tr><td style="text-align: center;">12</td><td>文件及紀錄查證，是否確實依據作業流程執行</td><td style="text-align: center;">○符合</td><td>作業流程完全合規。</td></tr>
-                    <tr><td style="text-align: center;">13</td><td>建築物施工日誌是否確實填寫</td><td style="text-align: center;">○符合</td><td>已與自檢表比對無誤。</td></tr>
+                    <tr><td style="text-align: center;">13</td><td>建築物施工日誌是否確實填寫</td><td style="text-align: center;">○符合</td><td>${stmtLog}</td></tr>
                     <tr><td style="text-align: center;">14</td><td>施工材料自主檢查是否確實</td><td style="text-align: center;">○符合</td><td>材料查驗確實。</td></tr>
-                    <tr><td style="text-align: center;">15</td><td>勤前教育紀錄</td><td style="text-align: center;">○符合</td><td>皆有登載於日誌中。</td></tr>
+                    <tr><td style="text-align: center;">15</td><td>勤前教育紀錄</td><td style="text-align: center;">○符合</td><td>皆有落實登載。</td></tr>
                     <tr><td style="text-align: center;">16</td><td>施工材料缺失改善成效及矯正預防情形</td><td style="text-align: center;">-</td><td>本期無材料缺失。</td></tr>
                     <tr><td style="text-align: center;">17</td><td>工程師是否確實了解執行工作的標準</td><td style="text-align: center;">○符合</td><td>表單數據顯示工程師熟稔規範。</td></tr>
                     <tr><td style="text-align: center;">18</td><td>工作成果是否符合作業紀錄</td><td style="text-align: center;">○符合</td><td>成果與紀錄 100% 吻合。</td></tr>
                     <tr><td colspan="4"><b>不合格事項之改善建議：</b>無。</td></tr>
-                    <tr><td colspan="4"><b>備註說明：</b>本報告由 AI 系統生成。<br><br>被稽核單位人員：____________________  稽核人員：____________________</td></tr>
+                    <tr><td colspan="4"><b>備註說明：</b>本報告由 AI 系統生成。<br><br><br>被稽核單位人員：____________________  稽核人員：____________________</td></tr>
                 </table>
                 <div class="page-break"></div>
 
+                <!-- 表 10.5-3 -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">表 10.5-3 內部品質稽核報告表</h3>
@@ -253,15 +334,16 @@
                 <table class="report-table">
                     <tr><td width="20%">稽核類型</td><td width="30%">文件稽核</td><td width="20%">稽核單位</td><td width="30%">品管組</td></tr>
                     <tr><td>稽核日期</td><td>${dateStr}</td><td>稽核人員</td><td>系統生成</td></tr>
-                    <tr><td colspan="4"><b>執行情形：</b><br>本次共計稽核 ${files.length} 份表單。各項放樣、鑽掘及材料試驗之自主檢查紀錄填寫確實，各項實測數值均優於規範標準，查無異常。</td></tr>
+                    <tr><td colspan="4"><b>執行情形：</b><br>本次共計稽核 ${activeChecklists.length} 份表單及 ${activeLogs.length} 份日誌。各項查驗及自主檢查紀錄填寫確實，各項實測數值均符合規範標準，查無異常。</td></tr>
                     <tr><td colspan="4"><b>交換意見紀要：</b><br>${combinedOpinion}</td></tr>
                     <tr><td colspan="4"><b>不良事件檢討：</b><br>本月無重大品質不良事件。</td></tr>
                     <tr><td colspan="4"><b>追蹤改善情形：</b><br>本期抽查自主檢查表，皆已落實量化數據填寫，無須開立不合格單。</td></tr>
                     <tr><td colspan="4"><b>建議事項：</b><br>維持目前優良之品管作業紀律，並持續落實數位化歸檔。</td></tr>
-                    <tr><td colspan="4"><br>品管負責人：____________________  稽核組長：____________________</td></tr>
+                    <tr><td colspan="4"><br><br>品管負責人：____________________  稽核組長：____________________</td></tr>
                 </table>
                 <div class="page-break"></div>
 
+                <!-- 表 10.5-4 -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">表 10.5-4 內部品質稽核改正行動通知書</h3>
@@ -271,23 +353,25 @@
                     <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
                         <td width="25%">查對表不符事項</td><td width="25%">矯正措施</td><td width="25%">改善結果</td><td width="25%">預防措施</td>
                     </tr>
-                    <tr><td style="text-align: center; padding: 30px 0;">無不符事項</td><td style="text-align: center;">-</td><td style="text-align: center;">-</td><td style="text-align: center;">-</td></tr>
-                    <tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。<br><br>品管負責人：____________________  稽核組長：____________________</td></tr>
+                    <tr><td style="text-align: center; padding: 40px 0;">無不符事項</td><td style="text-align: center;">-</td><td style="text-align: center;">-</td><td style="text-align: center;">-</td></tr>
+                    <tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。<br><br><br>品管負責人：____________________  稽核組長：____________________</td></tr>
                 </table>
                 
+                <!-- 表 10.5-5 -->
                 <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">表 10.5-5 內部品質稽核改正行動通知書管制表</h3>
                 </div>
                 <table class="report-table">
                     <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
-                        <td width="15%">改正行動通知編號</td><td width="15%">稽核日期</td><td width="20%">稽核類型(內外稽核)</td><td width="20%">受稽核單位(工地名稱)</td><td width="15%">預定完成改正日期</td><td width="15%">結案日期</td>
+                        <td width="15%">改正行動<br>通知編號</td><td width="15%">稽核日期</td><td width="20%">稽核類型<br>(內外稽核)</td><td width="20%">受稽核單位<br>(工地名稱)</td><td width="15%">預定完成<br>改正日期</td><td width="15%">結案日期</td>
                     </tr>
-                    <tr><td style="text-align: center; padding: 20px 0;">無</td><td style="text-align: center;">${dateStr}</td><td style="text-align: center;">內部稽核</td><td style="text-align: center;">防疫中心興建工程</td><td style="text-align: center;">-</td><td style="text-align: center;">${dateStr}</td></tr>
-                    <tr><td colspan="6"><br>品管負責人：____________________  稽核組長：____________________</td></tr>
+                    <tr><td style="text-align: center; padding: 20px 0;">無</td><td style="text-align: center;">${dateStr}</td><td style="text-align: center;">內部稽核</td><td style="text-align: center;">衛生福利部防疫中心興建工程</td><td style="text-align: center;">-</td><td style="text-align: center;">${dateStr}</td></tr>
+                    <tr><td colspan="6"><br><br>品管負責人：____________________  稽核組長：____________________</td></tr>
                 </table>
                 <div class="page-break"></div>
 
+                <!-- 表 10.5-6 -->
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="font-size: 20px; font-weight: bold;">豐譽營造股份有限公司</h2>
                     <h3 style="font-size: 18px; font-weight: bold;">品管人員品質稽核 表 10.5-6 自主檢查表紀錄表</h3>
@@ -331,7 +415,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = '豐譽營造_內部品質稽核成果報告_V3.doc';
+            link.download = '豐譽營造_內部品質稽核成果報告_合規版.doc';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
