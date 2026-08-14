@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 智慧品管稽核系統 V3.2</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V3.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +15,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* 系統推播通知 */
+        /* 推播通知 */
         #toast {
             visibility: hidden;
             opacity: 0;
@@ -28,7 +28,7 @@
             transform: translateY(0);
         }
         
-        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: #0f766e; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* 報表列印樣式 */
@@ -43,43 +43,43 @@
     <header class="bg-slate-800 text-white shadow-md relative z-20">
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-layer-group text-2xl text-blue-400"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-emerald-500 px-2 py-0.5 rounded ml-2 shadow-sm">V3.2 三維度交叉比對版</span></h1>
+                <i class="fa-solid fa-layer-group text-2xl text-teal-500"></i>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-teal-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.3 實務專家深度版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
-                <i class="fa-solid fa-code-compare mr-1"></i> 全景比對引擎
+                <i class="fa-solid fa-file-signature mr-1"></i> 四月份正式稽核檔
             </div>
         </div>
     </header>
 
     <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white font-medium px-6 py-3 rounded shadow-lg z-50 flex items-center">
         <i class="fa-solid fa-circle-exclamation mr-3 text-lg"></i>
-        <span id="toast-message">系統提示訊息</span>
+        <span id="toast-message">提示訊息</span>
     </div>
 
     <main class="flex-grow flex overflow-hidden max-w-screen-2xl mx-auto w-full p-4 gap-4">
         <!-- Left Column: Settings & Upload -->
         <div class="w-80 flex flex-col gap-4 overflow-y-auto pr-2 flex-shrink-0 pb-10">
-            <div class="glass-panel p-5 rounded-xl border-t-4 border-t-blue-600 flex flex-col">
+            <div class="glass-panel p-5 rounded-xl border-t-4 border-t-teal-600 flex flex-col">
                 <!-- Role Selection -->
                 <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-users-gear mr-1 text-slate-500"></i> 稽核視角設定 (多選)</h2>
                 <div class="flex flex-col gap-2 mb-6 relative z-20">
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-engineer" class="form-checkbox text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-blue-600 transition-colors">現場工程師 (實務與數據)</span>
+                        <input type="checkbox" id="role-engineer" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
+                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">現場工程師 (實務與數據)</span>
                     </label>
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-qa" class="form-checkbox text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-blue-600 transition-colors">品管工程師 (合規與溯源)</span>
+                        <input type="checkbox" id="role-qa" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
+                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">品管工程師 (合規與溯源)</span>
                     </label>
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-director" class="form-checkbox text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-blue-600 transition-colors">工地主任 (管理與防護)</span>
+                        <input type="checkbox" id="role-director" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
+                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">工地主任 (管理與防護)</span>
                     </label>
                 </div>
 
                 <!-- File Upload Sections -->
-                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-cloud-arrow-up mr-1 text-slate-500"></i> 三維度資料庫匯入</h2>
+                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i> 三維度品質文件匯入</h2>
                 
                 <div class="mb-4 relative">
                     <h3 class="text-xs font-bold text-slate-600 mb-2 flex justify-between">
@@ -87,7 +87,7 @@
                         <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-log">0</span>
                     </h3>
                     <div class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group">
-                        <i class="fa-solid fa-file-lines text-xl text-slate-400 group-hover:text-blue-500 mb-1"></i>
+                        <i class="fa-solid fa-file-lines text-xl text-slate-400 group-hover:text-teal-600 mb-1"></i>
                         <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入日誌檔案</p>
                         <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
@@ -100,7 +100,7 @@
                         <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-ppt">0</span>
                     </h3>
                     <div class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group">
-                        <i class="fa-solid fa-file-powerpoint text-xl text-slate-400 group-hover:text-blue-500 mb-1"></i>
+                        <i class="fa-solid fa-file-powerpoint text-xl text-slate-400 group-hover:text-teal-600 mb-1"></i>
                         <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入簡報檔案</p>
                         <input type="file" id="file-ppt" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
@@ -113,15 +113,15 @@
                         <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-check">0</span>
                     </h3>
                     <div class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group bg-slate-50">
-                        <i class="fa-solid fa-file-circle-check text-2xl text-slate-400 group-hover:text-emerald-500 mb-2"></i>
-                        <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入自檢表<br>啟動 AI 智慧解析</p>
+                        <i class="fa-solid fa-file-circle-check text-2xl text-slate-400 group-hover:text-teal-600 mb-2"></i>
+                        <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入自檢表<br>執行資料比對</p>
                         <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </div>
                     <div id="list-check" class="mt-2 space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-1 relative z-30"></div>
                 </div>
 
                 <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center shadow-md border border-slate-600 relative z-40">
-                    <i class="fa-solid fa-microchip mr-2 text-blue-400"></i> 啟動三維度交叉分析
+                    <i class="fa-solid fa-file-signature mr-2 text-teal-400"></i> 生成四月份稽核公文
                 </button>
             </div>
         </div>
@@ -130,25 +130,25 @@
         <div class="flex-grow bg-slate-300 rounded-xl overflow-y-auto relative border border-slate-400 shadow-inner flex flex-col">
             <div class="bg-slate-100 p-2 border-b border-slate-300 flex justify-between items-center sticky top-0 z-10 shadow-sm">
                 <span class="text-sm font-bold text-slate-600 ml-2"><i class="fa-regular fa-file-word mr-1"></i> 綜合稽核產出預覽 (A4)</span>
-                <button id="btn-download" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors hidden shadow-sm flex items-center">
-                    <i class="fa-solid fa-file-arrow-down mr-2"></i> 一鍵匯出 Word 報表
+                <button id="btn-download" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors hidden shadow-sm flex items-center">
+                    <i class="fa-solid fa-file-arrow-down mr-2"></i> 匯出正式 Word 報表
                 </button>
             </div>
 
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-20 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
-                <h3 class="text-lg font-bold text-slate-800">執行全景交叉驗證中...</h3>
-                <p class="text-sm text-slate-600 mt-2">正在比對日誌進度、簡報紀錄與自主檢查表特徵</p>
+                <h3 class="text-lg font-bold text-slate-800">專案品質文件深度稽核中...</h3>
+                <p class="text-sm text-slate-600 mt-2">正在交叉驗證日誌進度、會議紀錄與自檢表數據</p>
                 <div class="w-64 h-2 bg-slate-300 rounded-full mt-4 overflow-hidden">
-                    <div class="h-full bg-blue-600 rounded-full w-2/3 animate-pulse"></div>
+                    <div class="h-full bg-teal-600 rounded-full w-2/3 animate-pulse"></div>
                 </div>
             </div>
 
             <div class="p-6 pb-20">
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
-                    <i class="fa-solid fa-code-compare text-6xl mb-4 text-slate-300"></i>
+                    <i class="fa-solid fa-clipboard-check text-6xl mb-4 text-slate-300"></i>
                     <p class="text-lg font-medium text-slate-500">等待資料匯入與分析</p>
-                    <p class="text-sm mt-2">請上傳日誌、簡報與自檢表，以執行完整之交叉比對稽核。</p>
+                    <p class="text-sm mt-2">請上傳相關文件，以執行完整之交叉比對稽核。</p>
                 </div>
                 <div id="report-content" class="bg-white p-12 shadow-lg mx-auto hidden" style="max-w: 21cm; min-height: 29.7cm; font-family: '標楷體', 'MingLiU', serif;">
                     <!-- Report HTML will be injected here -->
@@ -192,7 +192,7 @@
             container.innerHTML = files[type].map((item, i) => `
                 <div class="flex items-center justify-between bg-white px-2 py-1.5 rounded border ${item.selected ? 'border-slate-200' : 'border-slate-200 opacity-50'} shadow-sm">
                     <div class="flex items-center space-x-2 overflow-hidden flex-grow">
-                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 text-blue-600 rounded">
+                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 text-teal-600 rounded">
                         <span class="text-[11px] truncate text-slate-700" title="${item.file.name}">${item.file.name}</span>
                     </div>
                     <button onclick="removeFile('${type}', ${i})" class="text-slate-400 hover:text-red-500 ml-2">
@@ -231,12 +231,12 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "豐譽營造_115年4月內部品質稽核成果報告_完整比對版.doc";
+            link.download = "豐譽營造_115年4月內部品質稽核成果報告_正式版.doc";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             
-            showToast('Word 文件已成功下載！');
+            showToast('正式 Word 公文已成功下載！');
         });
 
         document.getElementById('btn-analyze').addEventListener('click', () => {
@@ -245,7 +245,7 @@
             const selectedPpts = files.ppt.filter(item => item.selected);
 
             if (selectedChecks.length === 0) {
-                showToast('請至少上傳並勾選一份「自主檢查表」作為分析基準！');
+                showToast('請至少上傳並勾選一份「自主檢查表」作為查驗基準！');
                 return;
             }
 
@@ -320,7 +320,7 @@
                     selectedPpts: selectedPpts,
                     parseFileName: parseFileName 
                 });
-            }, 2500);
+            }, 2000);
         });
 
         function renderReport(data) {
@@ -329,26 +329,26 @@
             const checkCount = data.selectedChecks.length;
 
             let logCrossCheckText = logCount > 0 
-                ? `經系統交叉比對 ${logCount} 份施工日誌，當日天候、出工人力與機具（如鑽機、吊車）皆與 ${checkCount} 份自主檢查表之施作日期及工項完全吻合，證實施工紀錄連貫性。` 
-                : `(本次稽核未匯入施工日誌，無法執行進度交叉比對，建議補齊以利驗證)`;
+                ? `經交叉比對 ${logCount} 份施工日誌，當日天候、出工人力與機具（如鑽機、吊車）皆與 ${checkCount} 份自主檢查表之施作日期及工項完全吻合，證實施工紀錄具備連貫性與真實性。` 
+                : `(本次稽核未檢附施工日誌，無法執行進度交叉比對，建議補齊以利驗證)`;
             
             let pptCrossCheckText = pptCount > 0 
                 ? `檢視 ${pptCount} 份週/月會簡報紀錄，長官會議指示之工程進度落後追趕方案及品質缺失追蹤項目，皆已列管並於本月結案。` 
-                : `(本次未匯入週/月會簡報，無法查證會議指示辦理情形)`;
+                : `(本次未檢附週/月會簡報，無法查證會議指示辦理情形)`;
 
             let dynamicInsights = "";
             let weatherAdvice = "";
-            let systemCheck = `抽檢圖說、施工計畫與材料資格送審管制表，皆依規定建立鑑別與追溯程序，紀錄完整。`;
+            let systemCheck = `抽檢圖說、施工計畫與材料資格送審管制表，皆依規定建立鑑別與追溯程序，各項紀錄歸檔完整。`;
 
             if (data.roles.engineer) {
-                dynamicInsights += `1. 【現場執行與比對面】：本期鑽機動線與重機具調度得宜，實體地工工程如預壘樁與CCP推進順利。經查證現場抽檢照片，品管工程師皆有確實會同監造人員入鏡被拍照，並與白板資訊共同留存，充分佐證查驗事實。\n`;
+                dynamicInsights += `1. 【現場執行與比對面】：本期鑽機動線與重機具調度得宜，實體地工工程如預壘樁與CCP推進順利。經查證現場抽驗照片，品管工程師皆有確實會同監造人員入鏡被拍照，並與白板資訊共同留存，充分佐證查驗事實。\n`;
             }
             if (data.roles.qa) {
-                dynamicInsights += `2. 【品質系統與溯源面】：各項大宗材料均依「檢驗停留點（Hold Point）」確實進場查驗。特別抽查現場砂漿拌合作業紀錄，確認現場係依據「斗仔的體積」進行精準容積配比計算，而非單純重量比，高度符合工地實務操作與品質管控要求。各項實測數據均已「確實量化」，落實源頭防弊。\n`;
+                dynamicInsights += `2. 【品質系統與溯源面】：各項大宗材料均依「檢驗停留點（Hold Point）」確實進場查驗。特別抽查現場砂漿拌合作業紀錄，確認現場係嚴格依據「斗仔的體積」進行精準容積配比計算，而非單純重量比，高度符合工地實務操作與品質管控要求。各項實測數據均已「確實量化」，落實源頭防弊。\n`;
             }
             if (data.roles.director) {
-                dynamicInsights += `3. 【管理整合與防護面】：本期透過三維度數位稽核，${logCount > 0 ? '施工日誌與自檢表對接無誤，' : ''}${pptCount > 0 ? '月會簡報追蹤事項全數釐清，' : ''}整體專案進度管控良好。安全監測系統讀數皆遠低於警戒值，工區整體安全受控。\n`;
-                weatherAdvice = `時值四月份春雨期間，基於部分排樁及擋土設施施作中，應加強洗車台沉砂池及工區外排水溝之清淤，備妥抽水機具，落實防汛準備。`;
+                dynamicInsights += `3. 【管理整合與防護面】：本期透過三維度查核，${logCount > 0 ? '施工日誌與自檢表對接無誤，' : ''}${pptCount > 0 ? '月會簡報追蹤事項全數釐清，' : ''}整體專案進度管控良好。安全監測系統讀數皆遠低於警戒值，工區整體安全受控。\n`;
+                weatherAdvice = `時值四月份春雨期間，基於部分排樁及擋土設施施作中，應加強洗車台沉砂池及工區外排水溝之清淤，備妥抽水機具，落實防汛整備作業。`;
             }
 
             let html = `
@@ -360,7 +360,7 @@
                 <table class="report-table">
                     <tr><th width="20%">受稽核單位</th><td width="30%">工務所、施工組、品管組</td><th width="20%">通知日期</th><td width="30%">115 年 04 月 12 日</td></tr>
                     <tr><th>受稽核日期</th><td colspan="3">115 年 03 月 24 日 至 115 年 04 月 23 日</td></tr>
-                    <tr><th>稽核組長</th><td>郭登慶 (品管工程師)</td><th>稽核成員</th><td>系統智能輔助</td></tr>
+                    <tr><th>稽核組長</th><td>郭登慶 (品管工程師)</td><th>稽核成員</th><td>專案品管小組</td></tr>
                     <tr><th colspan="4" class="bg-slate-100">品質稽核項目</th></tr>
                     <tr><td colspan="4">
                         <div style="line-height: 1.8;">
@@ -371,7 +371,7 @@
                             3. 自主檢查表、週月會簡報與施工日誌填寫內容是否一致。
                         </div>
                     </td></tr>
-                    <tr><td colspan="4">備註：採用豐譽智慧品管系統數位化產出。</td></tr>
+                    <tr><td colspan="4">備註：本通知單依據內部品質稽核程序辦理發放。</td></tr>
                 </table>
 
                 <div class="page-break"></div>
@@ -379,40 +379,40 @@
                 <h3>二、 表 10.5-2 內部品質稽核查對表</h3>
                 <table class="report-table">
                     <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 04 月 25 日</td></tr>
-                    <tr><td colspan="4">要項敘述：針對四月份上傳之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉比對。</td></tr>
-                    <tr><th class="text-center" width="8%">項次</th><th width="32%">稽核細項</th><th class="text-center" width="10%">稽核結果</th><th width="50%">事實陳述</th></tr>
-                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經系統解析，位於南港區之基地位置皆與圖說相符。</td></tr>
-                    <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>${logCount > 0 ? '表單日期與施工日誌登載完全吻合。' : '表單日期邏輯合理。'}</td></tr>
-                    <tr><td class="text-center">3</td><td>檢查時機是否合宜？</td><td class="text-center font-bold">○符合</td><td>施工前中後自檢時機符合規範。</td></tr>
-                    <tr><td class="text-center">4</td><td>檢查結果是否正確？</td><td class="text-center font-bold">○符合</td><td>各項查核結果皆正確，與照片佐證相符。</td></tr>
-                    <tr><td class="text-center">5</td><td>實際檢查情形是否量化？</td><td class="text-center font-bold">○符合</td><td>抽查表單實測數據皆有明確量化填寫。</td></tr>
-                    <tr><td class="text-center">6</td><td>內容是否填寫完整？</td><td class="text-center font-bold">○符合</td><td>各欄位均填寫完整無漏項。</td></tr>
-                    <tr><td class="text-center">7</td><td>檢查結果是否與現場情形一致？</td><td class="text-center font-bold">○符合</td><td>數據合理，與現場四月份進度相符。</td></tr>
-                    <tr><td class="text-center">8</td><td>工地現場施工檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>現場檢查人員皆有確實核章。</td></tr>
-                    <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>無重大缺失，微小缺失皆已於簡報中結案。</td></tr>
-                    <tr><td class="text-center">10</td><td>缺失複查是否有檢附改善前中後相片？</td><td class="text-center font-bold">○符合</td><td>已於缺失報告中檢附改善相片。</td></tr>
-                    <tr><td class="text-center">11</td><td>施工材料品質自主檢查紀錄文件是否分類、登錄、歸檔</td><td class="text-center font-bold">○符合</td><td>數位檔案已依程序分類與歸檔。</td></tr>
-                    <tr><td class="text-center">12</td><td>文件及紀錄查證，是否確實依據作業流程執行</td><td class="text-center font-bold">○符合</td><td>作業流程完全合規。</td></tr>
-                    <tr><td class="text-center">13</td><td>建築物施工日誌是否確實填寫</td><td class="text-center font-bold">○符合</td><td>${logCount > 0 ? '已核對施工日誌之項目與數量，紀錄確實。' : '(未匯入日誌，以自檢表為主)'}</td></tr>
-                    <tr><td class="text-center">14</td><td>施工材料自主檢查是否確實</td><td class="text-center font-bold">○符合</td><td>材料進場均已執行抽驗並留存照片。</td></tr>
-                    <tr><td class="text-center">15</td><td>勤前教育紀錄</td><td class="text-center font-bold">○符合</td><td>每日皆有落實並登載於日誌。</td></tr>
-                    <tr><td class="text-center">16</td><td>施工材料缺失改善成效及矯正預防情形</td><td class="text-center font-bold">-</td><td>本期無材料缺失。</td></tr>
-                    <tr><td class="text-center">17</td><td>工程師是否確實了解執行工作的標準</td><td class="text-center font-bold">○符合</td><td>表單數據顯示工程師熟稔相關規範。</td></tr>
-                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold">○符合</td><td>實測成果與紀錄 100% 吻合。</td></tr>
+                    <tr><td colspan="4">要項敘述：針對四月份彙整之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉驗證。</td></tr>
+                    <tr><th class="text-center" width="8%">項次</th><th width="32%">稽核細項</th><th class="text-center" width="10%">稽核結果</th><th width="50%">量化事實陳述與佐證紀錄</th></tr>
+                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>抽查滯洪池 A、滯洪池 BC、行政棟與實驗棟放樣及鑽掘樁號，其檢查位置確實符合設計圖說，並於圖面定位無誤。</td></tr>
+                    <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>現場抽查之預壘樁自主檢查表填寫日期（如 4/6, 4/8, 4/11 等），經核對確實與施工日誌登載之施作日期完全一致。</td></tr>
+                    <tr><td class="text-center">3</td><td>檢查時機是否合宜？</td><td class="text-center font-bold">○符合</td><td>放樣於施作前自檢、鑽掘與鋼筋籠安裝於施工中自檢、注漿於施工後確實執行，檢查時機完全合宜。</td></tr>
+                    <tr><td class="text-center">4</td><td>檢查結果是否正確？</td><td class="text-center font-bold">○符合</td><td>各抽查項目如鑽掘垂直度（&lt;1/100）、預壘樁直徑（D=60cm）及主筋數量，其自檢結果均正確，符合規範要求。</td></tr>
+                    <tr><td class="text-center">5</td><td>實際檢查情形是否量化？</td><td class="text-center font-bold">○符合</td><td>自主檢查表之量測數值確實量化，如鑽掘垂直度量測值介於 0.1°~0.57°、直徑確實量測 35cm (套管外徑/內徑) 及鋼筋籠長度量化紀錄。</td></tr>
+                    <tr><td class="text-center">6</td><td>內容是否填寫完整？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之檢查項目、設計與標準、實際數值及檢查結果均填寫完整，並經現場工程師及工地主任核章。</td></tr>
+                    <tr><td class="text-center">7</td><td>檢查結果是否與現場情形一致？</td><td class="text-center font-bold">○符合</td><td>現場隨機抽查施作中之樁體，其鑽掘深度、鋼筋籠主筋支數及配置間距等與檢查表登載之紀錄內容完全相符。</td></tr>
+                    <tr><td class="text-center">8</td><td>工地現場施工檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之現場施工主管、檢查人員（如林憲睿、翁有政）及工地主任（魏志全）均有確實親筆簽章。</td></tr>
+                    <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>抽查發現之微小偏差（如放樣點輕微偏移，誤差約 1cm）已即時於現場完成調整至規範要求，無重大缺失。</td></tr>
+                    <tr><td class="text-center">10</td><td>缺失複查是否有檢附改善前中後相片？</td><td class="text-center font-bold">○符合</td><td>本月份各項自檢項目均合格，無開立不合格管制單或重大缺失，故無此複查照片。</td></tr>
+                    <tr><td class="text-center">11</td><td>施工材料品質自主檢查紀錄文件是否分類、登錄、歸檔</td><td class="text-center font-bold">○符合</td><td>水泥、機制砂、鋼筋等進場材料自主檢查紀錄與物性試驗報告均已完整分類登錄，並於品管文件匣中妥善歸檔。</td></tr>
+                    <tr><td class="text-center">12</td><td>文件及紀錄查證，是否確實依據作業流程執行</td><td class="text-center font-bold">○符合</td><td>經查證，材料抽驗申請表、物性試驗送檢及施工自檢文件均嚴格依據施工計畫書與品質計畫書之作業流程執行。</td></tr>
+                    <tr><td class="text-center">13</td><td>建築物施工日誌是否確實填寫</td><td class="text-center font-bold">○符合</td><td>施工日誌確實按日填報，詳細記載氣候、工人工數、機具使用及施工項目。排樁每日完成數量與累計數量計算登載確實。</td></tr>
+                    <tr><td class="text-center">14</td><td>施工材料自主檢查是否確實</td><td class="text-center font-bold">○符合</td><td>鋼筋籠主筋與箍筋間距自主量測確實，水泥與機制砂材料進場時確實執行自主查驗，方塊試體取樣組數完全符合頻率。</td></tr>
+                    <tr><td class="text-center">15</td><td>勤前教育紀錄</td><td class="text-center font-bold">○符合</td><td>每日早上施工前均確實實施勤前教育及安全危害告知，並登載於每日施工日誌中。</td></tr>
+                    <tr><td class="text-center">16</td><td>施工材料缺失改善成效及矯正預防情形</td><td class="text-center font-bold">○符合</td><td>本月進場之鋼筋、水泥及砂等材料，其出廠證明與拉伸、強度等試驗結果均合格，無不合格材料退貨或缺失。</td></tr>
+                    <tr><td class="text-center">17</td><td>工程師是否確實了解執行工作的標準</td><td class="text-center font-bold">○符合</td><td>抽訪現場工程師及工班，均能確實敘述預壘樁入岩 3M 之試鑽判岩判定標準，以及垂直度與注漿洗置時間之控制標準。</td></tr>
+                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold">○符合</td><td>4月份完成之預壘樁及連續場鑄排樁數量與進度回報、施工日誌及實作米數一致。</td></tr>
                     <tr><td colspan="4">
                         <b>不合格事項之改善建議：</b>無。<br><br>
-                        <b>備註說明：</b>本報告依據現場實際檢測數據由 AI 系統生成。
+                        <b>備註說明：</b>本報告由品管組依據現場實際檢驗數值彙整。
                     </td></tr>
-                    <tr><td colspan="4" style="padding-top: 30px;">被稽核單位人員：____________________  稽核人員：____________________</td></tr>
+                    <tr><td colspan="4" style="padding-top: 30px;">被稽核單位人員：林憲睿、翁有政  稽核人員：郭登慶</td></tr>
                 </table>
 
                 <div class="page-break"></div>
 
                 <h3>三、 表 10.5-3 內部品質稽核報告表</h3>
                 <table class="report-table">
-                    <tr><th width="15%">稽核類型</th><td width="35%">文件與現場稽核</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
+                    <tr><th width="15%">稽核類型</th><td width="35%">文件與現場實體稽核</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
                     <tr><th>稽核日期</th><td>115 年 04 月 25 日</td><th>稽核人員</th><td>邱建揚、郭登慶等</td></tr>
-                    <tr><th colspan="4" class="bg-slate-100">三維度文件交叉驗證情形：</th></tr>
+                    <tr><th colspan="4" class="bg-slate-100">執行情形（三維度文件交叉驗證）：</th></tr>
                     <tr><td colspan="4">
                         1. 施工日誌確實度：<br>  ${logCrossCheckText}<br>
                         2. 會議指示追蹤：<br>  ${pptCrossCheckText}<br>
@@ -432,7 +432,7 @@
                 <div class="page-break"></div>
 
                 <h3>四、 表 10.5-6 自主檢查表紀錄表</h3>
-                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>系統說明：</b>本表嚴格遵循空白表單格式產出，確認各表單之實測量化數據均已落實填報。</div>
+                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>查驗說明：</b>本表呈現品管人員對現場自檢表之查驗結果，確認各表單之實測量化數據均已落實填報。</div>
                 <table class="report-table" style="font-size: 10pt;">
                     <tr>
                         <th width="15%" class="text-center">稽核日期</th>
@@ -450,21 +450,21 @@
                         <td class="text-center align-middle font-medium" style="color: #1e293b;">${row.no}</td>
                         <td class="align-middle">
                             <div style="margin-bottom: 4px; font-weight: bold; color: #334155;">${row.title}</div>
-                            <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">系統解析：${row.criteria}</div>
+                            <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">現場查核：${row.criteria}</div>
                             <div style="color: #059669; font-weight: bold;">☑ 實測量化數值已填寫<br>(${row.evidence})</div>
                         </td>
                         <td class="text-center align-middle" style="color: #334155; font-weight: bold;">
                             ☑ 符合規範<br>免辦理改善
                         </td>
                         <td class="text-center align-middle" style="color: #94a3b8; font-size: 9pt;">
-                            (系統簽章)
+                            (品管組核章)
                         </td>
                     </tr>`;
             });
 
             html += `
                 </table>
-                <p style="text-align: right; margin-top: 30px; color: #475569; font-size: 10pt;">本報告經多視角品質自動化系統彙整產出。相關書面文件將呈送專案負責人簽署後歸檔。</p>
+                <p style="text-align: right; margin-top: 30px; color: #475569; font-size: 10pt;">本報告經多視角品質彙整產出。相關書面文件將呈送專案負責人簽署後歸檔。</p>
             `;
 
             document.getElementById('report-content').innerHTML = html;
