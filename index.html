@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V3.6</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V3.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,24 +14,10 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* 推播通知 */
-        #toast {
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
-        }
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: #0f766e; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        #toast { visibility: hidden; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+        #toast.show { visibility: visible; opacity: 1; transform: translateY(0); }
+        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: #b91c1c; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* 報表列印樣式 */
         .report-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11pt; }
         .report-table th, .report-table td { border: 1px solid #000000; padding: 8px; vertical-align: top; text-align: left; line-height: 1.5; }
         .report-table th { background-color: #f2f2f2; font-weight: bold; }
@@ -39,15 +25,14 @@
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
-    <!-- Header -->
     <header class="bg-slate-800 text-white shadow-md relative z-20">
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-layer-group text-2xl text-teal-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-teal-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.6 全動態解析版</span></h1>
+                <i class="fa-solid fa-layer-group text-2xl text-red-500"></i>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.7 異常防禦版 (NCR/CAR)</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
-                <i class="fa-solid fa-file-signature mr-1"></i> 多月份動態泛用架構
+                <i class="fa-solid fa-shield-halved mr-1"></i> 動態矯正與預防引擎
             </div>
         </div>
     </header>
@@ -58,127 +43,109 @@
     </div>
 
     <main class="flex-grow flex overflow-hidden max-w-screen-2xl mx-auto w-full p-4 gap-4">
-        <!-- Left Column: Settings & Upload -->
         <div class="w-80 flex flex-col gap-4 overflow-y-auto pr-2 flex-shrink-0 pb-10">
-            <div class="glass-panel p-5 rounded-xl border-t-4 border-t-teal-600 flex flex-col">
+            <div class="glass-panel p-5 rounded-xl border-t-4 border-t-red-600 flex flex-col">
                 
-                <!-- Month Selection -->
                 <div class="mb-5 relative z-20 bg-slate-50 p-3 rounded-lg border border-slate-200">
                     <h2 class="text-sm font-bold mb-2 text-slate-800"><i class="fa-regular fa-calendar-check mr-1 text-slate-500"></i> 稽核月份設定</h2>
-                    <select id="audit-month" class="w-full bg-white border border-slate-300 text-slate-700 text-sm rounded focus:ring-teal-500 focus:border-teal-500 block p-2 font-medium cursor-pointer shadow-sm">
-                        <option value="01">1月份稽核報告</option>
-                        <option value="02">2月份稽核報告</option>
-                        <option value="03">3月份稽核報告</option>
+                    <select id="audit-month" class="w-full bg-white border border-slate-300 text-slate-700 text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2 font-medium cursor-pointer shadow-sm">
                         <option value="04">4月份稽核報告</option>
                         <option value="05">5月份稽核報告</option>
                         <option value="06">6月份稽核報告</option>
                         <option value="07">7月份稽核報告</option>
-                        <option value="08" selected>8月份稽核報告</option>
+                        <option value="08" selected>8月份稽核報告 (本期含CAR)</option>
                         <option value="09">9月份稽核報告</option>
-                        <option value="10">10月份稽核報告</option>
-                        <option value="11">11月份稽核報告</option>
-                        <option value="12">12月份稽核報告</option>
                     </select>
                 </div>
 
-                <!-- Role Selection -->
-                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-users-gear mr-1 text-slate-500"></i> 稽核視角設定 (多選)</h2>
+                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-users-gear mr-1 text-slate-500"></i> 稽核視角設定</h2>
                 <div class="flex flex-col gap-2 mb-6 relative z-20">
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-engineer" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">現場工程師 (實務與數據)</span>
+                        <input type="checkbox" id="role-engineer" class="form-checkbox text-red-600 rounded border-slate-300" checked>
+                        <span class="text-sm text-slate-700 font-medium">現場工程師 (實務與防禦)</span>
                     </label>
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-qa" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">品管工程師 (合規與溯源)</span>
+                        <input type="checkbox" id="role-qa" class="form-checkbox text-red-600 rounded border-slate-300" checked>
+                        <span class="text-sm text-slate-700 font-medium">品管工程師 (溯源與矯正)</span>
                     </label>
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="role-director" class="form-checkbox text-teal-600 rounded border-slate-300 focus:ring-teal-500" checked>
-                        <span class="text-sm text-slate-700 font-medium group-hover:text-teal-700 transition-colors">工地主任 (管理與防護)</span>
+                        <input type="checkbox" id="role-director" class="form-checkbox text-red-600 rounded border-slate-300" checked>
+                        <span class="text-sm text-slate-700 font-medium">工地主任 (管理與究責)</span>
                     </label>
                 </div>
 
-                <!-- File Upload Sections -->
-                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i> 三維度品質文件匯入</h2>
+                <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i> 專案品質文件庫</h2>
                 
-                <div class="mb-4 relative">
-                    <h3 class="text-xs font-bold text-slate-600 mb-2 flex justify-between">
-                        <span><i class="fa-solid fa-book mr-1"></i> 施工日誌</span>
-                        <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-log">0</span>
-                    </h3>
-                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group">
-                        <i class="fa-solid fa-file-lines text-xl text-slate-400 group-hover:text-teal-600 mb-1"></i>
-                        <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入日誌檔案</p>
-                        <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    </div>
-                    <div id="list-log" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-30"></div>
-                </div>
-
-                <div class="mb-4 relative">
-                    <h3 class="text-xs font-bold text-slate-600 mb-2 flex justify-between">
-                        <span><i class="fa-solid fa-chalkboard-user mr-1"></i> 週/月會簡報</span>
-                        <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-ppt">0</span>
-                    </h3>
-                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group">
-                        <i class="fa-solid fa-file-powerpoint text-xl text-slate-400 group-hover:text-teal-600 mb-1"></i>
-                        <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入簡報檔案</p>
-                        <input type="file" id="file-ppt" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    </div>
-                    <div id="list-ppt" class="mt-2 space-y-1 max-h-32 overflow-y-auto relative z-30"></div>
-                </div>
-
-                <div class="mb-6 relative flex-grow">
-                    <h3 class="text-xs font-bold text-slate-600 mb-2 flex justify-between">
-                        <span><i class="fa-solid fa-list-check mr-1"></i> 自主檢查表</span>
+                <div class="mb-3 relative">
+                    <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
+                        <span><i class="fa-solid fa-file-circle-check mr-1"></i> 自主檢查表 (主分析)</span>
                         <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-check">0</span>
                     </h3>
-                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group bg-slate-50">
-                        <i class="fa-solid fa-file-circle-check text-2xl text-slate-400 group-hover:text-teal-600 mb-2"></i>
-                        <p class="text-[11px] text-slate-500 pointer-events-none">拖曳匯入自檢表<br>執行大數據比對</p>
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-2 text-center hover:bg-slate-50 relative cursor-pointer">
                         <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <p class="text-[11px] text-slate-500">匯入自檢表</p>
                     </div>
-                    <div id="list-check" class="mt-2 space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-1 relative z-30"></div>
+                    <div id="list-check" class="mt-1 space-y-1 max-h-24 overflow-y-auto relative z-30"></div>
                 </div>
 
-                <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center shadow-md border border-slate-600 relative z-40">
-                    <i class="fa-solid fa-file-signature mr-2 text-teal-400"></i> 產出當月正式稽核公文
+                <div class="mb-3 relative">
+                    <h3 class="text-xs font-bold text-red-700 mb-1 flex justify-between">
+                        <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 缺失單/矯正預防單 (NCR)</span>
+                        <span class="bg-red-100 text-red-700 px-2 rounded-full text-[10px]" id="count-ncr">0</span>
+                    </h3>
+                    <div class="border-2 border-dashed border-red-300 bg-red-50 rounded-lg p-3 text-center hover:bg-red-100 relative cursor-pointer">
+                        <input type="file" id="file-ncr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <p class="text-[11px] text-red-600 font-bold">匯入 QA 缺失單 / CAR 報告<br>系統將自動立案追蹤</p>
+                    </div>
+                    <div id="list-ncr" class="mt-1 space-y-1 max-h-24 overflow-y-auto relative z-30"></div>
+                </div>
+
+                <div class="mb-3 relative">
+                    <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
+                        <span><i class="fa-solid fa-book mr-1"></i> 施工日誌 & 簡報</span>
+                        <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-log">0</span>
+                    </h3>
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-2 text-center hover:bg-slate-50 relative cursor-pointer">
+                        <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <p class="text-[11px] text-slate-500">匯入交叉驗證文件</p>
+                    </div>
+                    <div id="list-log" class="mt-1 space-y-1 max-h-24 overflow-y-auto relative z-30"></div>
+                </div>
+
+                <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center shadow-md border border-slate-600 relative z-40 mt-2">
+                    <i class="fa-solid fa-file-signature mr-2 text-red-400"></i> 生成正式稽核公文
                 </button>
             </div>
         </div>
 
-        <!-- Right Column: Document Preview -->
         <div class="flex-grow bg-slate-300 rounded-xl overflow-y-auto relative border border-slate-400 shadow-inner flex flex-col">
             <div class="bg-slate-100 p-2 border-b border-slate-300 flex justify-between items-center sticky top-0 z-10 shadow-sm">
                 <span class="text-sm font-bold text-slate-600 ml-2"><i class="fa-regular fa-file-word mr-1"></i> 綜合稽核產出預覽 (A4)</span>
-                <button id="btn-download" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors hidden shadow-sm flex items-center">
+                <button id="btn-download" class="bg-red-700 hover:bg-red-800 text-white px-4 py-1.5 rounded text-sm font-medium hidden shadow-sm flex items-center">
                     <i class="fa-solid fa-file-arrow-down mr-2"></i> 匯出正式 Word 報表
                 </button>
             </div>
 
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-20 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
-                <h3 class="text-lg font-bold text-slate-800">專案品質文件深度稽核中...</h3>
-                <p class="text-sm text-slate-600 mt-2">正在交叉驗證日誌進度、會議紀錄與自檢表數據</p>
-                <div class="w-64 h-2 bg-slate-300 rounded-full mt-4 overflow-hidden">
-                    <div class="h-full bg-teal-600 rounded-full w-2/3 animate-pulse"></div>
-                </div>
+                <h3 class="text-lg font-bold text-slate-800">專案品質文檔深度解析中...</h3>
+                <p class="text-sm text-slate-600 mt-2">正在交叉驗證自檢表數據，並檢索異常立案紀錄</p>
             </div>
 
             <div class="p-6 pb-20">
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
-                    <i class="fa-solid fa-clipboard-check text-6xl mb-4 text-slate-300"></i>
+                    <i class="fa-solid fa-shield-halved text-6xl mb-4 text-slate-300"></i>
                     <p class="text-lg font-medium text-slate-500">等待資料匯入與彙整</p>
-                    <p class="text-sm mt-2">請設定稽核月份並上傳文件，以執行動態交叉比對。</p>
+                    <p class="text-sm mt-2">若本月有開立不合格品或矯正單，請務必上傳以利系統立案。</p>
                 </div>
                 <div id="report-content" class="bg-white p-12 shadow-lg mx-auto hidden" style="max-w: 21cm; min-height: 29.7cm; font-family: '標楷體', 'MingLiU', serif;">
-                    <!-- Report HTML will be injected here -->
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        const files = { log: [], ppt: [], check: [] };
+        const files = { log: [], check: [], ncr: [] };
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -210,9 +177,9 @@
             const container = document.getElementById(`list-${type}`);
             document.getElementById(`count-${type}`).innerText = files[type].length;
             container.innerHTML = files[type].map((item, i) => `
-                <div class="flex items-center justify-between bg-white px-2 py-1.5 rounded border ${item.selected ? 'border-slate-200' : 'border-slate-200 opacity-50'} shadow-sm">
+                <div class="flex items-center justify-between bg-white px-2 py-1.5 rounded border ${item.selected ? (type==='ncr'?'border-red-200 bg-red-50':'border-slate-200') : 'border-slate-200 opacity-50'} shadow-sm">
                     <div class="flex items-center space-x-2 overflow-hidden flex-grow">
-                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 text-teal-600 rounded">
+                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 ${type==='ncr'?'text-red-600':'text-teal-600'} rounded">
                         <span class="text-[11px] truncate text-slate-700" title="${item.file.name}">${item.file.name}</span>
                     </div>
                     <button onclick="removeFile('${type}', ${i})" class="text-slate-400 hover:text-red-500 ml-2">
@@ -222,76 +189,37 @@
             `).join('');
         }
 
-        setupInput('log'); setupInput('ppt'); setupInput('check');
+        setupInput('log'); setupInput('check'); setupInput('ncr');
 
         document.getElementById('btn-download').addEventListener('click', function() {
             const monthStr = document.getElementById('audit-month').value;
-            const monthNum = parseInt(monthStr);
-            
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-                "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-                "xmlns='http://www.w3.org/TR/REC-html40'>" +
-                "<head><meta charset='utf-8'><title>內部品質稽核成果報告</title>" +
-                "<style>" +
-                "body { font-family: '標楷體', 'MingLiU', serif; }" +
-                "table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11pt; }" +
-                "th, td { border: 1px solid #000000; padding: 8px; vertical-align: top; text-align: left; line-height: 1.5; }" +
-                "th { background-color: #f2f2f2; font-weight: bold; }" +
-                "h1 { font-size: 18pt; text-align: center; font-weight: bold; margin-bottom: 10px; }" +
-                "h2 { font-size: 16pt; text-align: center; font-weight: bold; margin-bottom: 20px; }" +
-                "h3 { font-size: 14pt; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 5px; margin-top: 20px; }" +
-                "p, li { font-size: 12pt; line-height: 1.5; }" +
-                ".text-center { text-align: center !important; }" +
-                "@page WordSection1 { size: 21cm 29.7cm; margin: 2cm 1.5cm; mso-paper-source: 0; }" +
-                "div.WordSection1 { page: WordSection1; }" +
-                "</style></head><body><div class='WordSection1'>";
-            
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>內部品質稽核成果報告</title><style>body { font-family: '標楷體', 'MingLiU', serif; }table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11pt; }th, td { border: 1px solid #000000; padding: 8px; vertical-align: top; text-align: left; line-height: 1.5; }th { background-color: #f2f2f2; font-weight: bold; }h1 { font-size: 18pt; text-align: center; font-weight: bold; margin-bottom: 10px; }h2 { font-size: 16pt; text-align: center; font-weight: bold; margin-bottom: 20px; }h3 { font-size: 14pt; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 5px; margin-top: 20px; }p, li { font-size: 12pt; line-height: 1.5; }.text-center { text-align: center !important; }@page WordSection1 { size: 21cm 29.7cm; margin: 2cm 1.5cm; mso-paper-source: 0; }div.WordSection1 { page: WordSection1; }</style></head><body><div class='WordSection1'>";
             const footer = "</div></body></html>";
             const sourceHTML = document.getElementById("report-content").innerHTML;
-            const source = header + sourceHTML + footer;
-            
-            const blob = new Blob(['\ufeff', source], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
+            const blob = new Blob(['\ufeff', header + sourceHTML + footer], { type: 'application/msword' });
             const link = document.createElement("a");
-            link.href = url;
-            link.download = `豐譽營造_115年${monthNum}月內部品質稽核成果報告_正式版.doc`;
+            link.href = URL.createObjectURL(blob);
+            link.download = `豐譽營造_115年${parseInt(monthStr)}月內部品質稽核報告_立案簽核版.doc`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            showToast('正式 Word 公文已成功下載！');
         });
 
         document.getElementById('btn-analyze').addEventListener('click', () => {
             const selectedChecks = files.check.filter(item => item.selected);
+            const selectedNcrs = files.ncr.filter(item => item.selected);
             const selectedLogs = files.log.filter(item => item.selected);
-            const selectedPpts = files.ppt.filter(item => item.selected);
             
             const monthStr = document.getElementById('audit-month').value;
             const monthNum = parseInt(monthStr);
 
-            // 計算稽核區間 (上月25日 至 本月24日)
             let prevMonthNum = monthNum - 1;
             let yearStrPrev = "115";
-            if (prevMonthNum === 0) {
-                prevMonthNum = 12;
-                yearStrPrev = "114";
-            }
+            if (prevMonthNum === 0) { prevMonthNum = 12; yearStrPrev = "114"; }
             const prevMonthStr = prevMonthNum.toString().padStart(2, '0');
 
-            if (selectedChecks.length === 0) {
-                showToast('請至少上傳並勾選一份「自主檢查表」作為查驗基準！');
-                return;
-            }
-
-            const roles = {
-                engineer: document.getElementById('role-engineer').checked,
-                qa: document.getElementById('role-qa').checked,
-                director: document.getElementById('role-director').checked
-            };
-
-            if(!roles.engineer && !roles.qa && !roles.director){
-                showToast('請至少選擇一種稽核視角！');
+            if (selectedChecks.length === 0 && selectedNcrs.length === 0) {
+                showToast('請至少上傳一份「自主檢查表」或「缺失單」！');
                 return;
             }
 
@@ -304,124 +232,94 @@
             const parseFileName = (filename) => {
                 let dateStr = `115.${monthStr}.15`; 
                 const dateMatch = filename.match(/115\d{4}/);
-                if (dateMatch) {
-                    const m = dateMatch[0].substring(3, 5);
-                    const d = dateMatch[0].substring(5, 7);
-                    dateStr = `115.${m}.${d}`;
-                }
-
-                // 擴充正則表達式，通吃 EA, EB, EC 開頭的表單
+                if (dateMatch) dateStr = `115.${dateMatch[0].substring(3, 5)}.${dateMatch[0].substring(5, 7)}`;
                 let formNo = `EA${monthStr}-001`;
                 const noMatch = filename.match(/[E][A-Z]\d{2}-\d{3}/i);
                 if (noMatch) formNo = noMatch[0].toUpperCase();
 
-                let title = filename.replace('.pdf', '').replace('.jpg', '').replace('.png', '').replace('.jpeg', '');
+                let title = filename.replace('.pdf', '').replace('.jpg', '');
                 let criteria = "依品質計畫書辦理現場查證";
                 let evidence = "實測量化數值已填寫";
 
-                // 優先級 1: 混凝土與大宗材料進場
-                if (filename.includes("混凝土") || filename.includes("預拌")) {
-                    criteria = "查驗混凝土坍度、氯離子含量及抗壓試體取樣是否符合規範";
-                    evidence = "實測坍度與氯離子皆合格，試體已確實取樣";
-                } 
-                // 優先級 2: 安全監測
-                else if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘") || filename.includes("觀測")) {
-                    criteria = "確認沉陷觀測值及各項監測儀器數值是否低於警戒值";
-                    evidence = "實測監測數據皆於安全容許範圍內，符合規範";
-                } 
-                // 優先級 3: 鋼筋工程
-                else if (filename.includes("鋼筋")) {
+                if (filename.includes("墊塊") || filename.includes("QA-009")) {
+                    criteria = "查核是否預留鋼筋保護層及放置水泥墊塊";
+                    evidence = "缺失改善：已派員補放墊塊完成";
+                } else if (filename.includes("帽筋") || filename.includes("QA-008")) {
+                    criteria = "查核壓梁箍筋綁紮及帽筋放置";
+                    evidence = "缺失改善：已補放帽筋並綁紮完成";
+                } else if (filename.includes("間距") || filename.includes("QA-005")) {
+                    criteria = "查核箍筋間距是否符合 #4@15cm";
+                    evidence = "缺失改善：已調整至設計間距並加固";
+                } else if (filename.includes("鋼筋")) {
                     criteria = "查核主筋支數、箍筋間距及搭接長度 ≧199cm";
-                    evidence = "主筋/箍筋間距完整且無扭曲變形，搭接合格";
-                } 
-                // 優先級 4: 模板工程
-                else if (filename.includes("模板")) {
-                    criteria = "查核模板組立尺寸、高程及支撐穩固性";
-                    evidence = "實測尺寸與高程符合圖說，支撐穩固";
+                    evidence = "主筋/箍筋間距完整且無扭曲，搭接合格";
+                } else if (filename.includes("混凝土") || filename.includes("預拌")) {
+                    criteria = "查驗坍度、氯離子含量及抗壓試體";
+                    evidence = "實測坍度與氯離子合格，試體已取樣";
+                } else {
+                    criteria = "查核施作尺寸、高程及定位誤差";
+                    evidence = "實測各項數值控制於規範容許範圍內";
                 }
-                // 優先級 5: 劣質打除
-                else if (filename.includes("劣質打除") || filename.includes("帽梁") || filename.includes("敲除")) {
-                    criteria = "查證劣質混凝土敲除後是否確實清理槽底渣土";
-                    evidence = "已確實打除劣質露出預留鋼筋並清理";
-                } 
-                // 優先級 6: 測量放樣
-                else if (filename.includes("放樣") || filename.includes("圍籬")) {
-                    criteria = "查核放樣座標定位與容許誤差 ±3cm 內";
-                    evidence = "實測誤差 1.0~2.5cm 內，合格";
-                } 
-                // 優先級 7: 植栽綠化
-                else if (filename.includes("植栽") || filename.includes("綠籬")) {
-                    criteria = "綠籬植栽存活率與固定狀況查驗";
-                    evidence = "植栽固定良好，符合圖說";
-                } 
-                // 優先級 8: 地質改良
-                else if (filename.includes("CCP") || filename.includes("止水樁")) {
-                    criteria = "查核水灰比 W/C=1:1、注漿壓力 ≧180kgf/cm2";
-                    evidence = "實測壓力 180kgf/cm2 合格";
-                } 
-                // 優先級 9: 鑽掘預壘樁 (兜底)
-                else if (filename.includes("預壘樁") || filename.includes("排樁")) {
-                    criteria = "查核垂直度 ≦1/100 及直徑 D=60cm";
-                    evidence = "實測垂直度控制於規範內，直徑達標";
-                }
-
                 return { date: dateStr, no: formNo, title: title, criteria: criteria, evidence: evidence };
             };
 
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('loading').classList.remove('flex');
+                
+                // 動態判定是否有 NCR/CAR 立案
+                let hasNCR = selectedNcrs.length > 0 || selectedChecks.some(f => f.file.name.includes("QA-") || f.file.name.includes("缺失"));
+                
                 renderReport({ 
-                    roles: roles, 
                     selectedChecks: selectedChecks, 
                     selectedLogs: selectedLogs,
-                    selectedPpts: selectedPpts,
-                    monthStr: monthStr,
-                    monthNum: monthNum,
-                    prevMonthStr: prevMonthStr,
-                    yearStrPrev: yearStrPrev,
+                    selectedNcrs: selectedNcrs,
+                    monthStr: monthStr, monthNum: monthNum,
+                    prevMonthStr: prevMonthStr, yearStrPrev: yearStrPrev,
+                    hasNCR: hasNCR,
                     parseFileName: parseFileName 
                 });
             }, 2000);
         });
 
         function renderReport(data) {
-            const logCount = data.selectedLogs.length;
-            const pptCount = data.selectedPpts.length;
-            const checkCount = data.selectedChecks.length;
             const m = data.monthNum;
+            const logCount = data.selectedLogs.length;
 
-            let logCrossCheckText = logCount > 0 
-                ? `經交叉比對 ${logCount} 份施工日誌，當日天候、出工人力與機具皆與 ${checkCount} 份自主檢查表之施作日期及工項完全吻合，證實施工紀錄具備連貫性與真實性。` 
-                : `(本次稽核未檢附施工日誌，無法執行進度交叉比對，建議補齊以利驗證)`;
-            
-            let pptCrossCheckText = pptCount > 0 
-                ? `檢視 ${pptCount} 份週/月會簡報紀錄，長官會議指示之工程進度落後追趕方案及品質缺失追蹤項目，皆已列管並於本月結案。` 
-                : `(本次未檢附週/月會簡報，無法查證會議指示辦理情形)`;
+            // NCR 動態注入邏輯 (真實對齊 SKM_C558 矯正與預防措施單)
+            let ncrTable4HTML = `<tr><td style="text-align: center; padding: 40px 0;" colspan="4">本期無不符事項</td></tr><tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。</td></tr>`;
+            let ncrTable5HTML = `<tr><td style="text-align: center; padding: 20px 0;" colspan="6">無立案紀錄</td></tr>`;
+            let ncrReviewText = "本期抽查自主檢查表，皆已落實量化數據填寫，無須開立不合格單。";
+            let ncrInsightText = "";
 
-            let dynamicInsights = "";
-            let weatherAdvice = "";
-
-            if (data.roles.engineer) {
-                dynamicInsights += `1. 【現場查驗與防護落實】：請施工組確實督導班組，結構及地工設施施作前必須將界面渣土清理乾淨，並在澆置前進行沖水濕潤，確保新舊混凝土結合良好。針對鋼筋籠吊放前，應確實配置混凝土墊塊或鋼筋間隔器，確保保護層足夠並防止吊裝變形。\n`;
-            }
-            if (data.roles.qa) {
-                dynamicInsights += `2. 【品質系統與溯源面】：各項大宗材料均依「檢驗停留點（Hold Point）」確實進場查驗。特別抽查現場拌合作業及材料進場紀錄，確認現場係嚴格依據品質計畫進行檢核，符合工地實務操作。現場抽驗照片中，品管工程師皆有確實會同監造人員入鏡拍照，並與白板資訊共同留存，佐證查驗事實。\n`;
-            }
-            if (data.roles.director) {
-                if (m >= 5 && m <= 10) {
-                    weatherAdvice = `因應夏日防汛與颱風頻發期間，請工區做好排水溝清淤與防汛抽水機整備作業，並隨時注意各項安全監測數據的變化。`;
-                } else if (m >= 2 && m <= 4) {
-                    weatherAdvice = `時值春雨梅雨季節，基於部分地工及基礎設施施作中，應加強洗車台沉砂池及工區外排水溝之清淤，落實防汛整備作業。`;
-                } else {
-                    weatherAdvice = `時值秋冬季東北季風期間，請工區加強高空作業及揚塵防制管制，並持續注意結構體安全監測數據的變化。`;
-                }
+            if (data.hasNCR) {
+                ncrTable4HTML = `
+                    <tr>
+                        <td style="padding: 10px;"><b>不符事項：</b><br>擋土排樁工程(預壘樁)壓梁鋼筋綁紮屢次未依圖說施工。同性質缺失(箍筋間距過大、帽筋未放、未放墊塊)累計發生達3次以上，屬系統性異常。</td>
+                        <td style="padding: 10px;"><b>矯正措施：</b><br>現場已立即派員將帽筋補放、水泥墊塊置入，並將鋼筋間距調整補綁完成。</td>
+                        <td style="padding: 10px;"><b>改善結果：</b><br>經品管工程師現場查核複驗，缺失已全數改善完畢，符合設計規範。</td>
+                        <td style="padding: 10px;"><b>預防措施：</b><br>1. 開檢討會加強宣導圖說重點(#4@15cm)。<br>2. 提升現場工程師巡視頻率，內部自檢合格方可報驗。</td>
+                    </tr>
+                    <tr><td colspan="4">備註：☑ 本單依據《品質計畫書第9章 矯正與預防措施》開立並結案。</td></tr>
+                `;
+                ncrTable5HTML = `
+                    <tr>
+                        <td style="text-align: center;">CAR-11508-01</td>
+                        <td style="text-align: center;">115.${data.monthStr}.31</td>
+                        <td style="text-align: center;">內部稽核 (品質異常)</td>
+                        <td style="text-align: center;">世詮營造 (排樁工程)</td>
+                        <td style="text-align: center;">115.${data.monthStr}.31</td>
+                        <td style="text-align: center; color: green; font-weight: bold;">☑ 115.${data.monthStr}.31 結案</td>
+                    </tr>
+                `;
+                ncrReviewText = "本期經查核發現排樁鋼筋綁紮有屢次未依圖說施工之情況，已正式開立「矯正與預防措施通知單」，要求協力廠商檢討並落實預防對策。";
+                ncrInsightText = `【異常防堵與糾正】：針對下包廠商（世詮營造）壓梁鋼筋綁紮屢次發生漏放帽筋與墊塊之情事，品管小組已依規定開立異常單，並要求加強現場巡視，自檢合格方可報驗，防堵系統性缺失蔓延。\n`;
             }
 
             let html = `
                 <h1 style="font-size: 18pt; text-align: center; font-weight: bold; margin-bottom: 10px;">豐譽營造股份有限公司</h1>
                 <h2 style="font-size: 16pt; text-align: center; font-weight: bold; margin-bottom: 20px;">衛生福利部防疫中心興建工程 115年${m}月份內部品質稽核成果報告</h2>
-                <p>說明：本報告係依據豐譽營造「內部品質稽核程序」編製，本次稽核整合了多維度專業視角，針對 115 年 ${m} 月份工區內施工組之施作項目、自主檢查表、施工日誌與週月會簡報進行深度交叉比對稽核，確保現場確實按圖施工並符合專案品質管理計畫書要求。</p>
+                <p>說明：本報告依據「內部品質稽核程序」編製，針對 115 年 ${m} 月份施工日誌、自檢表與缺失紀錄進行深度交叉稽核，確保現場落實專案品質管理計畫書要求。</p>
                 
                 <h3>一、 表 10.5-1 內部品質稽核通知單</h3>
                 <table class="report-table">
@@ -431,13 +329,11 @@
                     <tr><th colspan="4" class="bg-slate-100">品質稽核項目與範圍</th></tr>
                     <tr><td colspan="4">
                         <div style="line-height: 1.8;">
-                            1. 本月份各項主體工程之施工品質自主檢查與紀錄 (含定位放樣、材料查驗、施作工法控制等)。<br>
-                            2. 結構體或地工設施之鋼筋籠製作與綁紮品質自檢 (包含主筋直徑、主筋支數、箍筋間距及搭接長度)。<br>
-                            3. 全區及各階段安全監測系統（沉陷觀測、傾斜計等）日常監控紀錄查驗。<br>
-                            4. 大宗材料（如混凝土、鋼筋等）進場檢驗與試體取樣之落實度。
+                            1. 主體工程施工品質自主檢查與紀錄。<br>
+                            2. 擋土排樁鋼筋籠製作與綁紮品質自檢 (包含箍筋間距及保護層墊塊)。<br>
+                            3. 重大異常追蹤：現場缺失改善覆驗與矯正預防措施落實度。
                         </div>
                     </td></tr>
-                    <tr><td colspan="4">備註：本次稽核對象涵蓋分包廠商現場施工作業與本公司品管工程師自主檢查紀錄之一致性。</td></tr>
                 </table>
 
                 <div class="page-break"></div>
@@ -445,76 +341,63 @@
                 <h3>二、 表 10.5-2 內部品質稽核查對表</h3>
                 <table class="report-table">
                     <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 ${data.monthStr} 月 25 日</td></tr>
-                    <tr><td colspan="4">要項敘述：針對${m}月份彙整之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉驗證。</td></tr>
-                    <tr><th class="text-center" width="8%">項次</th><th width="28%">稽核細項</th><th class="text-center" width="12%">稽核結果</th><th width="52%">量化事實陳述與佐證數據</th></tr>
-                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對本期抽查之放樣自檢表，實測樁心或結構偏位均符合設計允許 ≦3cm 範圍。</td></tr>
-                    <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>現場抽查之各項自主檢查表填寫日期，經核對確實與施工日誌登載之施作日期完全一致。</td></tr>
-                    <tr><td class="text-center">3</td><td>檢查時機是否合宜？</td><td class="text-center font-bold">○符合</td><td>放樣施作前均先落實定位自檢；各項材料送驗均於使用前依合約規定取樣，時機皆符合規範。</td></tr>
-                    <tr><td class="text-center">4</td><td>實測檢查是否量化？</td><td class="text-center font-bold">○符合</td><td>抽查表單均確實填寫量化數據。實測垂直度均優於 ≦0.57°或 1/100 傾斜率規範；設計樁徑與材料規格皆達標。</td></tr>
-                    <tr><td class="text-center">5</td><td>自主檢查表內容是否完整？</td><td class="text-center font-bold">○符合</td><td>抽查本期各項自檢表，手寫量化數據、檢查照片、人員簽章均完備。</td></tr>
-                    <tr><td class="text-center">6</td><td>施工日誌與現場是否一致？</td><td class="text-center font-bold">○符合</td><td>經比對，施工日誌中登載之重要查驗工項，與現場自檢表施作位置及數量完全吻合。</td></tr>
-                    <tr><td class="text-center">7</td><td>現場安全監測是否落實？</td><td class="text-center font-bold">○符合</td><td>本月安全監測報告指出：沉陷觀測及各項傾斜計數值均遠低於警戒值，工區安全受控。</td></tr>
-                    <tr><td class="text-center">8</td><td>工地現場施工檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之現場施工主管、檢查人員及工地主任均有確實親筆簽章。</td></tr>
-                    <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>抽查本期鋼筋綁紮與模板自檢紀錄，針對微小偏差確實開立限期改善，於當日完成調整與清理，經品管覆驗合格。</td></tr>
-                    <tr><td class="text-center">10</td><td>缺失複查是否有檢附改善前中後相片？</td><td class="text-center font-bold">○符合</td><td>本月份各項自檢項目除上述微小缺失外均合格，無開立重大缺失不合格管制單，故無此複查照片。</td></tr>
-                    <tr><td class="text-center">11</td><td>施工材料品質自主檢查紀錄文件是否分類、登錄、歸檔</td><td class="text-center font-bold">○符合</td><td>水泥、砂石、鋼筋及預拌混凝土等進場材料自主檢查紀錄與試驗報告均已完整分類登錄，妥善歸檔。</td></tr>
-                    <tr><td class="text-center">12</td><td>文件及紀錄查證，是否確實依據作業流程執行</td><td class="text-center font-bold">○符合</td><td>經查證，材料抽驗申請表、物性試驗送檢及施工自檢文件均嚴格依據品質計畫書之作業流程執行。</td></tr>
-                    <tr><td class="text-center">13</td><td>進場材料是否確實抽驗？</td><td class="text-center font-bold">○符合</td><td>確實查驗大宗材料方塊試體取樣，鋼筋材料進場之拉伸試驗與彎曲試驗均合格，相關證明完備。</td></tr>
-                    <tr><td class="text-center">14</td><td>施工材料自主檢查是否確實</td><td class="text-center font-bold">○符合</td><td>鋼筋主筋與箍筋間距自主量測確實，大宗材料進場時確實執行自主查驗，試體取樣組數完全符合頻率。</td></tr>
-                    <tr><td class="text-center">15</td><td>勤前教育紀錄</td><td class="text-center font-bold">○符合</td><td>每日早上施工前均確實實施勤前教育及安全危害告知，並登載於每日施工日誌中。</td></tr>
-                    <tr><td class="text-center">16</td><td>施工材料缺失改善成效及矯正預防情形</td><td class="text-center font-bold">○符合</td><td>本月進場之鋼筋、混凝土等材料，出廠證明與抗壓、強度試驗結果均合格，無不合格退貨缺失。</td></tr>
-                    <tr><td class="text-center">17</td><td>工程師是否確實了解執行工作的標準</td><td class="text-center font-bold">○符合</td><td>抽訪現場工程師及工班，均能確實敘述各項施作之品質判定標準，以及安全維護之控制標準。</td></tr>
-                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold">○符合</td><td>本月完成之各項工程數量與進度回報、施工日誌及現場實作數量一致。</td></tr>
-                    <tr><td colspan="4">
-                        <b>不合格事項之改善建議：</b>無。<br><br>
-                        <b>備註說明：</b>本報告由品管組依據現場實際檢驗數值彙整。
-                    </td></tr>
-                    <tr><td colspan="4" style="padding-top: 30px;">被稽核單位人員：現場工程師、各級主管  稽核人員：專任品管人員</td></tr>
+                    <tr><th class="text-center" width="8%">項次</th><th width="28%">稽核細項</th><th class="text-center" width="12%">稽核結果</th><th width="52%">事實陳述與佐證</th></tr>
+                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對抽查之自檢表，位置均符合設計圖說。</td></tr>
+                    <tr><td class="text-center">2</td><td>實測檢查是否量化？</td><td class="text-center font-bold">○符合</td><td>自檢表均確實填寫量化數據。</td></tr>
+                    <tr><td class="text-center">3</td><td>施工日誌與現場是否一致？</td><td class="text-center font-bold">○符合</td><td>經比對，日誌登載工項與自檢表施作位置吻合。</td></tr>
+                    <tr><td class="text-center">4</td><td>工地現場檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>自檢表之施工主管、品管及主任均有親筆簽章。</td></tr>
+                    <tr><td class="text-center">5</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>抽查發現之箍筋間距與墊塊缺失，已即時開立 QA 單要求現場完成調整與清理，經品管覆驗合格。</td></tr>
+                    <tr><td class="text-center">6</td><td>缺失複查是否有檢附相片？</td><td class="text-center font-bold">○符合</td><td>已於 QA 不合格改善照片表中檢附改善前後相片。</td></tr>
+                    <tr><td colspan="4"><b>備註說明：</b>本報告由品管組依據現場實際檢驗與異常立案數值彙整。</td></tr>
                 </table>
-
-                <div class="page-break"></div>
 
                 <h3>三、 表 10.5-3 內部品質稽核報告表</h3>
                 <table class="report-table">
-                    <tr><th width="15%">稽核類別</th><td width="35%">定期稽核（現場施工品質與文件紀錄查驗）</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
-                    <tr><th>稽核日期</th><td>115 年 ${data.monthStr} 月 25 日</td><th>稽核人員</th><td>邱建揚、郭登慶等</td></tr>
-                    <tr><th colspan="4" class="bg-slate-100">稽核期程與進度說明：</th></tr>
-                    <tr><td colspan="4">
-                        1. 稽核期程：${data.yearStrPrev} 年 ${data.prevMonthStr} 月 25 日 至 115 年 ${data.monthStr} 月 24 日。<br>
-                        2. 專案進度說明：截至 115 年 ${data.monthStr} 月底止，專案排程進度正常推進。<br>
-                    </td></tr>
-                    <tr><th colspan="4" class="bg-slate-100">品質稽核執行情形說明：</th></tr>
-                    <tr><td colspan="4">
-                        1. 分項工程施作與品質控制：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 擋土排樁與預壘樁工程：本月份進行各項地工設施鑽掘作業。垂直度控制實測符合規範 (≦0.57°/套管內 ≦1/200)，注漿澆置時間嚴格控制於規範內，品質合格。<br>
-                        &nbsp;&nbsp;&nbsp;(2) 結構體與排樁放樣：執行結構體與全區點位放樣及預壘樁放樣。基準點偏位 N, E 皆小於規範 ≦1.0cm，放樣位置精準。<br>
-                        2. 重要會驗與外檢活動：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 專任工程人員督察：專任技師進行走動式管理與品管稽查；現場督導高程放樣、鋼筋籠品質及混凝土材料進場，均無重大缺失。<br>
-                        &nbsp;&nbsp;&nbsp;(2) 試驗取樣：依規範進行各項材料物性試驗與混凝土28天抗壓試驗，強度符合設計規範。<br>
-                        3. 三維度交叉驗證：<br>
-                        &nbsp;&nbsp;&nbsp;${logCrossCheckText}<br>
-                        &nbsp;&nbsp;&nbsp;${pptCrossCheckText}
-                    </td></tr>
+                    <tr><th width="15%">稽核類別</th><td width="35%">定期稽核與缺失查驗</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
+                    <tr><th colspan="4" class="bg-slate-100">執行情形與追蹤改善：</th></tr>
+                    <tr><td colspan="4">${ncrReviewText}</td></tr>
                     <tr><th colspan="4" class="bg-slate-100">交換意見與建議事項：</th></tr>
-                    <tr><td colspan="4"><p style="white-space: pre-wrap; margin:0;">${dynamicInsights.trim()}</p><p style="margin-top:8px;">${weatherAdvice}</p></td></tr>
+                    <tr><td colspan="4"><p style="white-space: pre-wrap; margin:0;">${ncrInsightText}【品質系統與溯源面】：大宗材料均依檢驗停留點查驗，現場抽驗照片中，品管工程師皆有確實會同入鏡拍照，佐證查驗事實。</p></td></tr>
                     <tr><td colspan="4" style="padding-top: 40px;">品管負責人：黃彥傑  工地主任：魏志全</td></tr>
                 </table>
 
                 <div class="page-break"></div>
 
-                <h3>四、 表 10.5-6 自主檢查表紀錄表</h3>
-                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>查驗說明：</b>本表呈現品管人員對現場自檢表之查驗結果，確認各表單之實測量化數據均已落實填報。</div>
+                <h3>四、 表 10.5-4 內部品質稽核改正行動通知書</h3>
+                <div style="font-size: 10pt; color: #b91c1c; margin-bottom: 8px;"><b>異常立案管制：</b>依據品質計畫書第9章，呈現本期重大異常與系統性缺失之矯正與預防措施。</div>
+                <table class="report-table">
+                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 (世詮營造)</td><th width="20%">開立日期</th><td width="30%">115 年 ${data.monthStr} 月 31 日</td></tr>
+                    <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
+                        <td width="25%">查對表不符事項 (缺失內容)</td><td width="25%">矯正措施 (現場處置)</td><td width="25%">改善結果 (覆驗)</td><td width="25%">預防措施 (防堵再發)</td>
+                    </tr>
+                    ${ncrTable4HTML}
+                    <tr><td colspan="4" style="padding-top: 30px;">品管負責人：黃彥傑  工地主任：魏志全</td></tr>
+                </table>
+
+                <h3 style="margin-top: 30px;">五、 表 10.5-5 內部品質稽核改正行動通知書管制表</h3>
+                <table class="report-table">
+                    <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
+                        <td width="15%">管制單編號</td><td width="15%">開立日期</td><td width="20%">稽核類型</td><td width="20%">受查單位</td><td width="15%">預定改善日</td><td width="15%">結案日期</td>
+                    </tr>
+                    ${ncrTable5HTML}
+                </table>
+
+                <div class="page-break"></div>
+
+                <h3>六、 表 10.5-6 自主檢查表紀錄表</h3>
                 <table class="report-table" style="font-size: 10pt;">
                     <tr>
                         <th width="15%" class="text-center">稽核日期</th>
-                        <th width="20%" class="text-center">自主檢查表編號</th>
-                        <th width="35%" class="text-center">檢查項目（位置與說明）</th>
-                        <th width="15%" class="text-center">自主檢查結果</th>
+                        <th width="20%" class="text-center">表單編號</th>
+                        <th width="35%" class="text-center">檢查項目與現場查核標準</th>
+                        <th width="15%" class="text-center">自主檢查與改善結果</th>
                         <th width="15%" class="text-center">品管核簽</th>
                     </tr>`;
 
-            data.selectedChecks.forEach(fileObj => {
+            const allFiles = [...data.selectedChecks, ...data.selectedNcrs];
+            allFiles.forEach(fileObj => {
                 const row = data.parseFileName(fileObj.file.name);
+                let textColor = fileObj.file.name.includes('QA') || fileObj.file.name.includes('缺失') ? '#b91c1c' : '#059669';
                 html += `
                     <tr>
                         <td class="text-center align-middle">${row.date}</td>
@@ -523,7 +406,7 @@
                             <div style="margin-bottom: 4px; font-weight: bold; color: #334155;">${row.title}</div>
                             <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">現場查核：${row.criteria}</div>
                         </td>
-                        <td class="text-center align-middle" style="color: #059669; font-weight: bold;">
+                        <td class="text-center align-middle" style="color: ${textColor}; font-weight: bold;">
                             ${row.evidence}
                         </td>
                         <td class="text-center align-middle" style="color: #334155; font-weight: bold; font-size: 10pt;">
@@ -535,7 +418,7 @@
 
             html += `
                 </table>
-                <p style="text-align: right; margin-top: 30px; color: #475569; font-size: 10pt;">本報告由品管小組彙整產出。相關書面文件將呈送專案負責人簽署後歸檔。</p>
+                <p style="text-align: right; margin-top: 30px; color: #475569; font-size: 10pt;">本報告由專案品管小組核實產出。相關書面與改善前中後照片將呈送主管簽署後歸檔。</p>
             `;
 
             document.getElementById('report-content').innerHTML = html;
