@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V3.4</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V3.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -44,10 +44,10 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-layer-group text-2xl text-teal-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-teal-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.4 專家深度解析版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-teal-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.5 動態排程版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
-                <i class="fa-solid fa-file-signature mr-1"></i> 四月份正式稽核檔
+                <i class="fa-solid fa-file-signature mr-1"></i> 多月份適用架構
             </div>
         </div>
     </header>
@@ -61,6 +61,26 @@
         <!-- Left Column: Settings & Upload -->
         <div class="w-80 flex flex-col gap-4 overflow-y-auto pr-2 flex-shrink-0 pb-10">
             <div class="glass-panel p-5 rounded-xl border-t-4 border-t-teal-600 flex flex-col">
+                
+                <!-- Month Selection -->
+                <div class="mb-5 relative z-20 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <h2 class="text-sm font-bold mb-2 text-slate-800"><i class="fa-regular fa-calendar-check mr-1 text-slate-500"></i> 稽核月份設定</h2>
+                    <select id="audit-month" class="w-full bg-white border border-slate-300 text-slate-700 text-sm rounded focus:ring-teal-500 focus:border-teal-500 block p-2 font-medium cursor-pointer shadow-sm">
+                        <option value="01">1月份稽核報告</option>
+                        <option value="02">2月份稽核報告</option>
+                        <option value="03">3月份稽核報告</option>
+                        <option value="04">4月份稽核報告</option>
+                        <option value="05">5月份稽核報告</option>
+                        <option value="06">6月份稽核報告</option>
+                        <option value="07">7月份稽核報告</option>
+                        <option value="08" selected>8月份稽核報告</option>
+                        <option value="09">9月份稽核報告</option>
+                        <option value="10">10月份稽核報告</option>
+                        <option value="11">11月份稽核報告</option>
+                        <option value="12">12月份稽核報告</option>
+                    </select>
+                </div>
+
                 <!-- Role Selection -->
                 <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-users-gear mr-1 text-slate-500"></i> 稽核視角設定 (多選)</h2>
                 <div class="flex flex-col gap-2 mb-6 relative z-20">
@@ -121,7 +141,7 @@
                 </div>
 
                 <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center shadow-md border border-slate-600 relative z-40">
-                    <i class="fa-solid fa-file-signature mr-2 text-teal-400"></i> 生成四月份稽核公文
+                    <i class="fa-solid fa-file-signature mr-2 text-teal-400"></i> 生成正式稽核公文
                 </button>
             </div>
         </div>
@@ -148,7 +168,7 @@
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
                     <i class="fa-solid fa-clipboard-check text-6xl mb-4 text-slate-300"></i>
                     <p class="text-lg font-medium text-slate-500">等待資料匯入與彙整</p>
-                    <p class="text-sm mt-2">請上傳相關文件，以執行完整之交叉比對稽核。</p>
+                    <p class="text-sm mt-2">請設定稽核月份並上傳文件，以執行交叉比對稽核。</p>
                 </div>
                 <div id="report-content" class="bg-white p-12 shadow-lg mx-auto hidden" style="max-w: 21cm; min-height: 29.7cm; font-family: '標楷體', 'MingLiU', serif;">
                     <!-- Report HTML will be injected here -->
@@ -205,6 +225,9 @@
         setupInput('log'); setupInput('ppt'); setupInput('check');
 
         document.getElementById('btn-download').addEventListener('click', function() {
+            const monthStr = document.getElementById('audit-month').value;
+            const monthNum = parseInt(monthStr);
+            
             const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
                 "xmlns:w='urn:schemas-microsoft-com:office:word' " +
                 "xmlns='http://www.w3.org/TR/REC-html40'>" +
@@ -231,7 +254,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "豐譽營造_115年4月內部品質稽核成果報告_正式版.doc";
+            link.download = `豐譽營造_115年${monthNum}月內部品質稽核成果報告_正式版.doc`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -243,6 +266,18 @@
             const selectedChecks = files.check.filter(item => item.selected);
             const selectedLogs = files.log.filter(item => item.selected);
             const selectedPpts = files.ppt.filter(item => item.selected);
+            
+            const monthStr = document.getElementById('audit-month').value;
+            const monthNum = parseInt(monthStr);
+
+            // 計算稽核區間 (上月25日 至 本月24日)
+            let prevMonthNum = monthNum - 1;
+            let yearStrPrev = "115";
+            if (prevMonthNum === 0) {
+                prevMonthNum = 12;
+                yearStrPrev = "114";
+            }
+            const prevMonthStr = prevMonthNum.toString().padStart(2, '0');
 
             if (selectedChecks.length === 0) {
                 showToast('請至少上傳並勾選一份「自主檢查表」作為查驗基準！');
@@ -266,9 +301,8 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('loading').classList.add('flex');
 
-            // 深度特徵映射解析引擎 (完全對齊四月份實務報告)
             const parseFileName = (filename) => {
-                let dateStr = "115.04.15"; 
+                let dateStr = `115.${monthStr}.15`; 
                 const dateMatch = filename.match(/115\d{4}/);
                 if (dateMatch) {
                     const m = dateMatch[0].substring(3, 5);
@@ -276,7 +310,7 @@
                     dateStr = `115.${m}.${d}`;
                 }
 
-                let formNo = "EA04-001";
+                let formNo = `EA${monthStr}-001`;
                 const noMatch = filename.match(/EA\d{2}-\d{3}/);
                 if (noMatch) formNo = noMatch[0];
 
@@ -286,16 +320,16 @@
 
                 if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘")) {
                     criteria = "確認沉陷觀測值及傾斜計數值是否低於警戒值";
-                    evidence = "實測沉陷 1.90mm、傾斜 89.4sec，符合規範";
+                    evidence = "實測沉陷數值、傾斜數值符合規範";
                 } else if (filename.includes("放樣") || filename.includes("圍籬")) {
                     criteria = "查核樁心座標定位與容許誤差 ±3cm 內";
                     evidence = "實測誤差 1.0~2.5cm 內，合格";
                 } else if (filename.includes("預壘樁") && !filename.includes("鋼筋") && !filename.includes("模板")) {
                     criteria = "查核垂直度 ≦1/100 及直徑 D=60cm";
-                    evidence = "實測垂直度 0.2~0.3°，直徑達標";
+                    evidence = "實測垂直度控制於規範內，直徑達標";
                 } else if (filename.includes("鋼筋")) {
                     criteria = "查核主筋支數、箍筋間距及搭接長度 ≧199cm";
-                    evidence = "主筋/箍筋間距完整且無扭曲變形，搭接達 200cm";
+                    evidence = "主筋/箍筋間距完整且無扭曲變形，搭接合格";
                 } else if (filename.includes("劣質打除") || filename.includes("帽梁")) {
                     criteria = "查證劣質混凝土敲除後是否清理槽底渣土";
                     evidence = "已確實打除劣質露出預留鋼筋並清理";
@@ -318,6 +352,10 @@
                     selectedChecks: selectedChecks, 
                     selectedLogs: selectedLogs,
                     selectedPpts: selectedPpts,
+                    monthStr: monthStr,
+                    monthNum: monthNum,
+                    prevMonthStr: prevMonthStr,
+                    yearStrPrev: yearStrPrev,
                     parseFileName: parseFileName 
                 });
             }, 2000);
@@ -327,6 +365,7 @@
             const logCount = data.selectedLogs.length;
             const pptCount = data.selectedPpts.length;
             const checkCount = data.selectedChecks.length;
+            const m = data.monthNum;
 
             let logCrossCheckText = logCount > 0 
                 ? `經交叉比對 ${logCount} 份施工日誌，當日天候、出工人力與機具皆與 ${checkCount} 份自主檢查表之施作日期及工項完全吻合，證實施工紀錄具備連貫性與真實性。` 
@@ -348,18 +387,24 @@
                 dynamicInsights += `3. 【品質系統與溯源面】：各項大宗材料均依「檢驗停留點（Hold Point）」確實進場查驗。特別抽查現場砂漿拌合作業紀錄，確認現場係嚴格依據「斗仔的體積」進行精準容積配比計算，而非單純重量比，符合工地實務操作。現場抽驗照片中，品管工程師皆有確實會同監造人員入鏡拍照，並與白板資訊共同留存，佐證查驗事實。\n`;
             }
             if (data.roles.director) {
-                weatherAdvice = `因應 5 月汛期將至，請工區做好排水溝清淤與防汛抽水機整備（已於 4月23日完成防汛演練），並隨時注意歷史建物沉陷監測數據 SB1~8 的變化。`;
+                if (m >= 5 && m <= 10) {
+                    weatherAdvice = `因應夏日防汛與颱風頻發期間，請工區做好排水溝清淤與防汛抽水機整備作業，並隨時注意歷史建物沉陷監測數據的變化。`;
+                } else if (m >= 2 && m <= 4) {
+                    weatherAdvice = `時值春雨梅雨季節，基於部分地工設施施作中，應加強洗車台沉砂池及工區外排水溝之清淤，落實防汛整備作業。`;
+                } else {
+                    weatherAdvice = `時值秋冬季東北季風期間，請工區加強高空作業及揚塵防制管制，並持續注意結構體安全監測數據的變化。`;
+                }
             }
 
             let html = `
                 <h1 style="font-size: 18pt; text-align: center; font-weight: bold; margin-bottom: 10px;">豐譽營造股份有限公司</h1>
-                <h2 style="font-size: 16pt; text-align: center; font-weight: bold; margin-bottom: 20px;">衛生福利部防疫中心興建工程 115年4月份內部品質稽核成果報告</h2>
-                <p>說明：本報告係依據豐譽營造「內部品質稽核程序」編製，本次稽核整合了多維度專業視角，針對 115 年 4 月份工區內施工組之施作項目、自主檢查表、施工日誌與週月會簡報進行深度交叉比對稽核，確保現場確實按圖施工並符合專案品質管理計畫書要求。</p>
+                <h2 style="font-size: 16pt; text-align: center; font-weight: bold; margin-bottom: 20px;">衛生福利部防疫中心興建工程 115年${m}月份內部品質稽核成果報告</h2>
+                <p>說明：本報告係依據豐譽營造「內部品質稽核程序」編製，本次稽核整合了多維度專業視角，針對 115 年 ${m} 月份工區內施工組之施作項目、自主檢查表、施工日誌與週月會簡報進行深度交叉比對稽核，確保現場確實按圖施工並符合專案品質管理計畫書要求。</p>
                 
                 <h3>一、 表 10.5-1 內部品質稽核通知單</h3>
                 <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">工務所、施工組、品管組</td><th width="20%">通知日期</th><td width="30%">115 年 04 月 12 日</td></tr>
-                    <tr><th>受稽核日期</th><td colspan="3">115 年 03 月 24 日 至 115 年 04 月 23 日</td></tr>
+                    <tr><th width="20%">受稽核單位</th><td width="30%">工務所、施工組、品管組</td><th width="20%">通知日期</th><td width="30%">115 年 ${data.monthStr} 月 12 日</td></tr>
+                    <tr><th>受稽核日期</th><td colspan="3">${data.yearStrPrev} 年 ${data.prevMonthStr} 月 25 日 至 115 年 ${data.monthStr} 月 24 日</td></tr>
                     <tr><th>稽核組長</th><td>品管負責人 (黃彥傑)</td><th>稽核成員</th><td>專案品管小組</td></tr>
                     <tr><th colspan="4" class="bg-slate-100">品質稽核項目與範圍</th></tr>
                     <tr><td colspan="4">
@@ -377,27 +422,27 @@
 
                 <h3>二、 表 10.5-2 內部品質稽核查對表</h3>
                 <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 04 月 24 日</td></tr>
-                    <tr><td colspan="4">要項敘述：針對四月份彙整之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉驗證。</td></tr>
+                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 ${data.monthStr} 月 25 日</td></tr>
+                    <tr><td colspan="4">要項敘述：針對${m}月份彙整之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉驗證。</td></tr>
                     <tr><th class="text-center" width="8%">項次</th><th width="28%">稽核細項</th><th class="text-center" width="12%">稽核結果</th><th width="52%">量化事實陳述與佐證數據</th></tr>
-                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對 4月9日與10日排樁放樣自檢表(EA54-015)，實測樁心偏位 1.0~2.5cm，完全符合設計允許 ≦3cm 範圍。</td></tr>
-                    <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>抽查 4月1日歷建預壘樁自檢表(EA54-012)與當日施工日誌，確認鑽掘與注漿灌澆日期完全相符。</td></tr>
+                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對本期排樁放樣自檢表，實測樁心偏位 1.0~2.5cm，完全符合設計允許 ≦3cm 範圍。</td></tr>
+                    <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>現場抽查之預壘樁自主檢查表填寫日期，經核對確實與施工日誌登載之施作日期完全一致。</td></tr>
                     <tr><td class="text-center">3</td><td>檢查時機是否合宜？</td><td class="text-center font-bold">○符合</td><td>套管鑽掘施作前均先落實樁心定位放樣自檢；材料送驗均於使用前依合約規定取樣，時機皆符合規範。</td></tr>
-                    <tr><td class="text-center">4</td><td>實測檢查是否量化？</td><td class="text-center font-bold">○符合</td><td>自檢表均確實填寫量化數據。如 4月1日自檢表(EA54-012)實測預壘樁垂直度為 0.3°及0.2° (優於 ≦0.57°或 1/100 傾斜率規範)；設計樁徑 35cm 實測為 35cm。</td></tr>
-                    <tr><td class="text-center">5</td><td>自主檢查表內容是否完整？</td><td class="text-center font-bold">○符合</td><td>抽查歷建預壘樁自檢表（EA54-012, EA54-013, EA54-014）手寫量化數據、檢查照片、簽章均完備。</td></tr>
-                    <tr><td class="text-center">6</td><td>施工日誌與現場是否一致？</td><td class="text-center font-bold">○符合</td><td>經比對，4月15日施工日誌中登載歷建預壘樁帽梁高程放樣、劣質打除等工項，與自檢表(EA54-017, EA54-019)施作位置完全吻合。</td></tr>
-                    <tr><td class="text-center">7</td><td>現場安全監測是否落實？</td><td class="text-center font-bold">○符合</td><td>4月安全監測報告指出：歷史建物沉陷觀測（SB1~8）最大累計沉陷僅 1.90mm（遠低於 20mm 警戒值）；電子式傾斜計（ET1~16）最大值 89.4sec（低於 220sec 警戒值），工區安全。</td></tr>
+                    <tr><td class="text-center">4</td><td>實測檢查是否量化？</td><td class="text-center font-bold">○符合</td><td>自檢表均確實填寫量化數據。實測垂直度均優於 ≦0.57°或 1/100 傾斜率規範；設計樁徑皆達標。</td></tr>
+                    <tr><td class="text-center">5</td><td>自主檢查表內容是否完整？</td><td class="text-center font-bold">○符合</td><td>抽查歷建預壘樁自檢表，手寫量化數據、檢查照片、簽章均完備。</td></tr>
+                    <tr><td class="text-center">6</td><td>施工日誌與現場是否一致？</td><td class="text-center font-bold">○符合</td><td>經比對，施工日誌中登載歷建預壘樁帽梁高程放樣、劣質打除等工項，與自檢表施作位置完全吻合。</td></tr>
+                    <tr><td class="text-center">7</td><td>現場安全監測是否落實？</td><td class="text-center font-bold">○符合</td><td>本月安全監測報告指出：沉陷觀測及傾斜計數值均遠低於警戒值，工區安全受控。</td></tr>
                     <tr><td class="text-center">8</td><td>工地現場施工檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之現場施工主管、檢查人員（如林憲睿、翁有政）及工地主任（魏志全）均有確實親筆簽章。</td></tr>
-                    <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>抽查 4月18日歷建預壘樁帽梁鋼筋綁紮自檢(EA54-021)，對「帽梁箍筋間距過大」缺失確實開立限期改善，於當日完成鋼筋重綁調整與清理，經品管與技師覆驗合格。</td></tr>
+                    <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>抽查帽梁鋼筋綁紮自檢，針對微小偏差缺失確實開立限期改善，於當日完成調整與清理，經品管覆驗合格。</td></tr>
                     <tr><td class="text-center">10</td><td>缺失複查是否有檢附改善前中後相片？</td><td class="text-center font-bold">○符合</td><td>本月份各項自檢項目除上述微小缺失外均合格，無開立重大缺失不合格管制單，故無此複查照片。</td></tr>
                     <tr><td class="text-center">11</td><td>施工材料品質自主檢查紀錄文件是否分類、登錄、歸檔</td><td class="text-center font-bold">○符合</td><td>水泥、機制砂、鋼筋等進場材料自主檢查紀錄與物性試驗報告均已完整分類登錄，並於品管文件匣中妥善歸檔。</td></tr>
                     <tr><td class="text-center">12</td><td>文件及紀錄查證，是否確實依據作業流程執行</td><td class="text-center font-bold">○符合</td><td>經查證，材料抽驗申請表、物性試驗送檢及施工自檢文件均嚴格依據施工計畫書與品質計畫書之作業流程執行。</td></tr>
-                    <tr><td class="text-center">13</td><td>進場材料是否確實抽驗？</td><td class="text-center font-bold">○符合</td><td>4月8日與15日林暐勝技師到場督導，確實查驗砂漿 50*50*50mm 方塊試體取樣，4月9日材料抽驗鋼筋材料進場之拉伸試驗與彎曲試驗均合格。</td></tr>
+                    <tr><td class="text-center">13</td><td>進場材料是否確實抽驗？</td><td class="text-center font-bold">○符合</td><td>確實查驗砂漿方塊試體取樣，鋼筋材料進場之拉伸試驗與彎曲試驗均合格。</td></tr>
                     <tr><td class="text-center">14</td><td>施工材料自主檢查是否確實</td><td class="text-center font-bold">○符合</td><td>鋼筋籠主筋與箍筋間距自主量測確實，水泥與機制砂材料進場時確實執行自主查驗，方塊試體取樣組數完全符合頻率。</td></tr>
                     <tr><td class="text-center">15</td><td>勤前教育紀錄</td><td class="text-center font-bold">○符合</td><td>每日早上施工前均確實實施勤前教育及安全危害告知，並登載於每日施工日誌中。</td></tr>
                     <tr><td class="text-center">16</td><td>施工材料缺失改善成效及矯正預防情形</td><td class="text-center font-bold">○符合</td><td>本月進場之鋼筋、水泥及砂等材料，其出廠證明與拉伸、強度等試驗結果均合格，無不合格材料退貨或缺失。</td></tr>
                     <tr><td class="text-center">17</td><td>工程師是否確實了解執行工作的標準</td><td class="text-center font-bold">○符合</td><td>抽訪現場工程師及工班，均能確實敘述預壘樁入岩 3M 之試鑽判岩判定標準，以及垂直度與注漿洗置時間之控制標準。</td></tr>
-                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold">○符合</td><td>4月份完成之預壘樁及連續場鑄排樁數量與進度回報、施工日誌及實作米數一致。</td></tr>
+                    <tr><td class="text-center">18</td><td>工作成果是否符合作業紀錄</td><td class="text-center font-bold">○符合</td><td>本月完成之預壘樁及連續場鑄排樁數量與進度回報、施工日誌及實作米數一致。</td></tr>
                     <tr><td colspan="4">
                         <b>不合格事項之改善建議：</b>無。<br><br>
                         <b>備註說明：</b>本報告由品管組依據現場實際檢驗數值彙整。
@@ -410,22 +455,20 @@
                 <h3>三、 表 10.5-3 內部品質稽核報告表</h3>
                 <table class="report-table">
                     <tr><th width="15%">稽核類別</th><td width="35%">定期稽核（現場施工品質與文件紀錄查驗）</td><th width="15%">稽核單位</th><td width="35%">品管組</td></tr>
-                    <tr><th>稽核日期</th><td>115 年 04 月 24 日</td><th>稽核人員</th><td>邱建揚、郭登慶等</td></tr>
+                    <tr><th>稽核日期</th><td>115 年 ${data.monthStr} 月 25 日</td><th>稽核人員</th><td>邱建揚、郭登慶等</td></tr>
                     <tr><th colspan="4" class="bg-slate-100">稽核期程與進度說明：</th></tr>
                     <tr><td colspan="4">
-                        1. 稽核期程：115 年 3 月 25 日 至 115 年 4 月 23 日。<br>
-                        2. 專案進度說明：截至 115 年 4 月 23 日止，本工程預定進度為 2.35%，實際進度為 2.35%，進度超前 0.00%（累計工期已達 248 天）。<br>
-                        3. 4月份天候統計：晴天 15 天、雨天 7 天。4月23日下午舉辦防汛緊急應變演練。
+                        1. 稽核期程：${data.yearStrPrev} 年 ${data.prevMonthStr} 月 25 日 至 115 年 ${data.monthStr} 月 24 日。<br>
+                        2. 專案進度說明：截至 115 年 ${data.monthStr} 月底止，專案排程進度正常推進。<br>
                     </td></tr>
                     <tr><th colspan="4" class="bg-slate-100">品質稽核執行情形說明：</th></tr>
                     <tr><td colspan="4">
                         1. 分項工程施作與品質控制：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 歷史建築周圍預壘樁：4月1日至4月8日進行 D35 (∮=60cm) 套管鑽掘。垂直度控制實測為 0.2° ~ 0.5° (規範 ≦0.57°/套管內 ≦1/200)，注漿澆置時間嚴格控制於 2~3 分鐘內（規範 ≦3分鐘），品質合格。<br>
-                        &nbsp;&nbsp;&nbsp;(2) 結構體與排樁放樣：4月15日執行結構體與全區點位放樣，4月16日執行滯洪池 A 預壘樁放樣。基準點偏位 N: 0.1~0.9cm, E: 0.1~0.7cm (規範 ≦1.0cm)，放樣位置精準。<br>
+                        &nbsp;&nbsp;&nbsp;(1) 歷史建築周圍預壘樁：進行 D35 (∮=60cm) 套管鑽掘。垂直度控制實測為 0.2° ~ 0.5° (規範 ≦0.57°/套管內 ≦1/200)，注漿澆置時間嚴格控制於 2~3 分鐘內（規範 ≦3分鐘），品質合格。<br>
+                        &nbsp;&nbsp;&nbsp;(2) 結構體與排樁放樣：執行結構體與全區點位放樣及滯洪池預壘樁放樣。基準點偏位 N: 0.1~0.9cm, E: 0.1~0.7cm (規範 ≦1.0cm)，放樣位置精準。<br>
                         2. 重要會驗與外檢活動：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 4月22日：劉培森建築師事務所進行4月份建築師工地督導查核，並填具「建築物監造(監督、查核)報告表(B14-3)」，抽查預壘樁與安全監測合格。<br>
-                        &nbsp;&nbsp;&nbsp;(2) 專任工程人員督察：4月8日邱建揚技師進行走動式管理與品管稽查；4月15日與4月17日林暐勝技師現場督導歷建預壘樁帽梁高程放樣及鋼筋籠品質，均無重大缺失。<br>
-                        &nbsp;&nbsp;&nbsp;(3) 試驗取樣：4月2日進行油槽預壘樁壓梁混凝土28天抗壓試驗，強度符合設計規範。<br>
+                        &nbsp;&nbsp;&nbsp;(1) 專任工程人員督察：邱建揚技師進行走動式管理與品管稽查；林暐勝技師現場督導歷建預壘樁帽梁高程放樣及鋼筋籠品質，均無重大缺失。<br>
+                        &nbsp;&nbsp;&nbsp;(2) 試驗取樣：進行油槽預壘樁壓梁混凝土28天抗壓試驗，強度符合設計規範。<br>
                         3. 三維度交叉驗證：<br>
                         &nbsp;&nbsp;&nbsp;${logCrossCheckText}<br>
                         &nbsp;&nbsp;&nbsp;${pptCrossCheckText}
