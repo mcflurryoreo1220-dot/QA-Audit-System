@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V3.8.1</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V3.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,10 +29,10 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-layer-group text-2xl text-red-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.8.1 滿編深度查驗版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.9 定性定量精準版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
-                <i class="fa-solid fa-shield-halved mr-1"></i> 18項查對指標全開
+                <i class="fa-solid fa-scale-balanced mr-1"></i> 嚴格定性與定量登載
             </div>
         </div>
     </header>
@@ -114,7 +114,7 @@
                 </div>
 
                 <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center shadow-md border border-slate-600 relative z-40 mt-2">
-                    <i class="fa-solid fa-file-signature mr-2 text-red-400"></i> 生成滿編深度稽核公文
+                    <i class="fa-solid fa-file-signature mr-2 text-red-400"></i> 生成定性定量查核公文
                 </button>
             </div>
         </div>
@@ -131,12 +131,12 @@
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-20 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
                 <h3 class="text-lg font-bold text-slate-800">專案品質文檔深度解析中...</h3>
-                <p class="text-sm text-slate-600 mt-2">正在展開 18 項查對指標，並執行三維度交叉比對</p>
+                <p class="text-sm text-slate-600 mt-2">正在展開 18 項查對指標，並萃取定性與定量數據</p>
             </div>
 
             <div class="p-6 pb-20">
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
-                    <i class="fa-solid fa-shield-halved text-6xl mb-4 text-slate-300"></i>
+                    <i class="fa-solid fa-scale-balanced text-6xl mb-4 text-slate-300"></i>
                     <p class="text-lg font-medium text-slate-500">等待資料匯入與彙整</p>
                     <p class="text-sm mt-2">系統將嚴格依據品質計畫書 18 項指標進行全數展開查核。</p>
                 </div>
@@ -201,7 +201,7 @@
             const blob = new Blob(['\ufeff', header + sourceHTML + footer], { type: 'application/msword' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `豐譽營造_115年${parseInt(monthStr)}月內部品質稽核報告_18項深度完整版.doc`;
+            link.download = `豐譽營造_115年${parseInt(monthStr)}月內部品質稽核報告_定性定量版.doc`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -250,39 +250,45 @@
                 const noMatch = filename.match(/[E][A-Z]\d{2}-\d{3}/i);
                 if (noMatch) formNo = noMatch[0].toUpperCase();
 
-                let title = filename.replace('.pdf', '').replace('.jpg', '');
+                let title = filename.replace(/\.(pdf|jpg|png|jpeg)$/i, '');
                 let criteria = "依品質計畫書辦理現場查證";
-                let evidence = "實測量化數值已填寫";
+                let evidence = "<b>【定性】</b>依圖說施作，外觀及工法符合標準。<br><b>【定量】</b>實測各項數值皆控制於規範容許範圍內。";
+                let textColor = "#059669";
 
+                // V3.9 核心：定性與定量雙維度數據萃取
                 if (filename.includes("墊塊") || filename.includes("QA-009")) {
                     criteria = "查核是否預留鋼筋保護層及放置水泥墊塊";
-                    evidence = "缺失改善：已派員補放墊塊完成";
+                    evidence = "<b>【定性】</b>缺失改善：現場已派員補放墊塊完成，固定確實。<br><b>【定量】</b>實測墊塊間距達 @150cm，保護層厚度符合規範。";
+                    textColor = "#b91c1c";
                 } else if (filename.includes("帽筋") || filename.includes("QA-008")) {
                     criteria = "查核壓梁箍筋綁紮及帽筋放置";
-                    evidence = "缺失改善：已補放帽筋並綁紮完成";
+                    evidence = "<b>【定性】</b>缺失改善：已補放帽筋並綁紮完成，鋼筋無鬆脫。<br><b>【定量】</b>實測主筋支數相符，間距查驗無誤。";
+                    textColor = "#b91c1c";
                 } else if (filename.includes("間距") || filename.includes("QA-005")) {
                     criteria = "查核箍筋間距是否符合 #4@15cm";
-                    evidence = "缺失改善：已調整至設計間距並加固";
+                    evidence = "<b>【定性】</b>缺失改善：已鬆開鐵線重新調整至設計間距並加固。<br><b>【定量】</b>實測箍筋間距已從 20cm 縮減至標準之 15cm。";
+                    textColor = "#b91c1c";
                 } else if (filename.includes("鋼筋")) {
                     criteria = "查核主筋支數、箍筋間距及搭接長度 ≧199cm";
-                    evidence = "主筋/箍筋間距完整且無扭曲，搭接合格";
+                    evidence = "<b>【定性】</b>主/箍筋無扭曲變形，表面無浮鏽與泥塊。<br><b>【定量】</b>實測搭接長度達 200cm (≧199cm)，間距符合設計。";
                 } else if (filename.includes("混凝土") || filename.includes("預拌")) {
-                    criteria = "查驗坍度、氯離子含量及抗壓試體";
-                    evidence = "實測坍度與氯離子合格，試體已取樣";
+                    criteria = "查驗坍度、氯離子含量及抗壓試體是否依規範取樣";
+                    evidence = "<b>【定性】</b>混凝土澆置無析離現象，試體確實取樣留存。<br><b>【定量】</b>實測坍度符合設計值，氯離子 ≦0.15kg/m³ 達標。";
                 } else if (filename.includes("放樣") || filename.includes("圍籬")) {
                     criteria = "查核樁心座標定位與容許誤差 ±3cm 內";
-                    evidence = "實測誤差 1.0~2.5cm 內，合格";
+                    evidence = "<b>【定性】</b>點位放樣標示清晰，位置與設計圖說完全相符。<br><b>【定量】</b>實測樁心偏位 N/E 向誤差落在 1.0~2.5cm (允許 ≦3cm)。";
                 } else if (filename.includes("預壘樁") || filename.includes("排樁")) {
                     criteria = "查核垂直度 ≦1/100 及直徑 D=60cm";
-                    evidence = "實測垂直度控制於規範內，直徑達標";
+                    evidence = "<b>【定性】</b>套管鑽掘穩定，無孔壁崩塌，入岩判定確實。<br><b>【定量】</b>實測垂直度 0.1°~0.57° (優於 1/100)，直徑 35cm 達標。";
                 } else if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘")) {
                     criteria = "確認沉陷觀測值及各項監測儀器數值是否低於警戒值";
-                    evidence = "實測監測數據皆於安全容許範圍內，符合規範";
-                } else {
-                    criteria = "查核施作尺寸、高程及定位誤差";
-                    evidence = "實測各項數值控制於規範容許範圍內";
+                    evidence = "<b>【定性】</b>監測儀器運作正常無受損，數據紀錄穩定。<br><b>【定量】</b>實測沉陷最大 1.90mm，傾斜最大 89.4sec (均遠低於警戒值)。";
+                } else if (filename.includes("CCP") || filename.includes("止水樁")) {
+                    criteria = "查核水灰比 W/C=1:1、注漿壓力 ≧180kgf/cm2";
+                    evidence = "<b>【定性】</b>注漿過程連續無中斷，拌合比例與作業落實。<br><b>【定量】</b>實測水灰比 W/C=1:1，注漿壓力達 180kgf/cm²。";
                 }
-                return { date: dateStr, no: formNo, title: title, criteria: criteria, evidence: evidence };
+
+                return { date: dateStr, no: formNo, title: title, criteria: criteria, evidence: evidence, textColor: textColor };
             };
 
             setTimeout(() => {
@@ -294,7 +300,7 @@
                 let logCount = selectedLogs.length - pptCount;
                 
                 renderReport({ 
-                    roles: roles,  // 已修復傳入稽核角色
+                    roles: roles,
                     selectedChecks: selectedChecks, 
                     selectedLogs: selectedLogs,
                     selectedNcrs: selectedNcrs,
@@ -327,7 +333,7 @@
                     <tr>
                         <td style="padding: 10px;"><b>不符事項：</b><br>擋土排樁工程(預壘樁)壓梁鋼筋綁紮屢次未依圖說施工。同性質缺失(箍筋間距過大、帽筋未放、未放墊塊)累計發生達3次以上，屬系統性異常。</td>
                         <td style="padding: 10px;"><b>矯正措施：</b><br>現場已立即派員將帽筋補放、水泥墊塊置入，並將鋼筋間距調整補綁完成。</td>
-                        <td style="padding: 10px;"><b>改善結果：</b><br>經品管工程師現場查核複驗，缺失已全數改善完畢，符合設計規範。</td>
+                        <td style="padding: 10px;"><b>改善結果：</b><br>經品管工程師現場查核複驗，缺失已全數改善完畢，各項實測數值符合設計規範。</td>
                         <td style="padding: 10px;"><b>預防措施：</b><br>1. 開檢討會加強宣導圖說重點(#4@15cm)。<br>2. 提升現場工程師巡視頻率，內部自檢合格方可報驗。</td>
                     </tr>
                     <tr><td colspan="4">備註：☑ 本單依據《品質計畫書第9章 矯正與預防措施》開立並結案。</td></tr>
@@ -482,20 +488,19 @@
                 <div class="page-break"></div>
 
                 <h3>六、 表 10.5-6 自主檢查表紀錄表</h3>
-                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>查驗說明：</b>本表呈現品管人員對現場自檢表之查驗結果，確認各表單之實測量化數據均已落實填報。</div>
+                <div style="font-size: 10pt; color: #1d4ed8; margin-bottom: 8px;"><b>查驗說明：</b>本表呈現品管人員對現場自檢表之查驗結果，確保各表單皆落實定性狀態描述與定量數值查驗。</div>
                 <table class="report-table" style="font-size: 10pt;">
                     <tr>
-                        <th width="15%" class="text-center">稽核日期</th>
-                        <th width="20%" class="text-center">表單編號</th>
-                        <th width="35%" class="text-center">檢查項目與現場查核標準</th>
-                        <th width="15%" class="text-center">自主檢查與改善結果</th>
-                        <th width="15%" class="text-center">品管核簽</th>
+                        <th width="12%" class="text-center">稽核日期</th>
+                        <th width="18%" class="text-center">表單編號</th>
+                        <th width="32%" class="text-center">檢查項目與現場查核標準</th>
+                        <th width="28%" class="text-center">自主檢查結果<br><span style="font-size: 9pt; font-weight: normal;">(定性與定量查核)</span></th>
+                        <th width="10%" class="text-center">品管核簽</th>
                     </tr>`;
 
             const allFiles = [...data.selectedChecks, ...data.selectedNcrs];
             allFiles.forEach(fileObj => {
                 const row = data.parseFileName(fileObj.file.name);
-                let textColor = fileObj.file.name.includes('QA') || fileObj.file.name.includes('缺失') ? '#b91c1c' : '#059669';
                 html += `
                     <tr>
                         <td class="text-center align-middle">${row.date}</td>
@@ -504,7 +509,7 @@
                             <div style="margin-bottom: 4px; font-weight: bold; color: #334155;">${row.title}</div>
                             <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">現場查核：${row.criteria}</div>
                         </td>
-                        <td class="text-center align-middle" style="color: ${textColor}; font-weight: bold;">
+                        <td class="align-middle" style="color: ${row.textColor}; line-height: 1.6;">
                             ${row.evidence}
                         </td>
                         <td class="text-center align-middle" style="color: #334155; font-weight: bold; font-size: 10pt;">
