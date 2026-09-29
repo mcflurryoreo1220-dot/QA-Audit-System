@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V3.8</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V3.8.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +29,7 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-layer-group text-2xl text-red-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.8 滿編深度查驗版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.8.1 滿編深度查驗版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
                 <i class="fa-solid fa-shield-halved mr-1"></i> 18項查對指標全開
@@ -289,12 +289,12 @@
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('loading').classList.remove('flex');
                 
-                // 動態判定是否有 NCR/CAR 立案
                 let hasNCR = selectedNcrs.length > 0 || selectedChecks.some(f => f.file.name.includes("QA-") || f.file.name.includes("缺失"));
                 let pptCount = selectedLogs.filter(f => f.file.name.includes("簡報") || f.file.name.includes("會議")).length;
                 let logCount = selectedLogs.length - pptCount;
                 
                 renderReport({ 
+                    roles: roles,  // 已修復傳入稽核角色
                     selectedChecks: selectedChecks, 
                     selectedLogs: selectedLogs,
                     selectedNcrs: selectedNcrs,
@@ -486,7 +486,7 @@
                 <table class="report-table" style="font-size: 10pt;">
                     <tr>
                         <th width="15%" class="text-center">稽核日期</th>
-                        <th width="20%" class="text-center">自主檢查表編號</th>
+                        <th width="20%" class="text-center">表單編號</th>
                         <th width="35%" class="text-center">檢查項目與現場查核標準</th>
                         <th width="15%" class="text-center">自主檢查與改善結果</th>
                         <th width="15%" class="text-center">品管核簽</th>
