@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V5.1</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V5.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,12 +22,8 @@
         .report-table th, .report-table td { border: 1px solid #000000; padding: 8px; vertical-align: top; text-align: left; line-height: 1.5; }
         .report-table th { background-color: #f2f2f2; font-weight: bold; }
         .page-break { page-break-before: always; }
-        
-        /* 覆核表格輸入框樣式 */
         .editable-input { width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-size: 0.85rem; color: #334155; transition: border-color 0.2s; }
         .editable-input:focus { outline: none; border-color: #0f766e; box-shadow: 0 0 0 1px #0f766e; }
-        
-        /* 自動萃取閃爍特效 */
         .auto-extracted { animation: flashHighlight 2s ease-out; }
         @keyframes flashHighlight {
             0% { background-color: #ccfbf1; border-color: #14b8a6; box-shadow: 0 0 0 2px #14b8a6; }
@@ -40,10 +36,10 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-ranking-star text-2xl text-amber-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V5.1 戰情神器版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V5.2 邏輯除錯防禦版</span></h1>
             </div>
             <div class="text-sm bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700">
-                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 文件數據自動萃取
+                <i class="fa-solid fa-shield-cat mr-1"></i> 過濾機制與精準日曆
             </div>
         </div>
     </header>
@@ -69,7 +65,7 @@
                         <select id="audit-month" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded focus:ring-teal-500 p-1.5 font-medium">
                             <option value="01">1月份</option><option value="02">2月份</option><option value="03">3月份</option>
                             <option value="04">4月份</option><option value="05">5月份</option><option value="06">6月份</option>
-                            <option value="07">7月份</option><option value="08" selected>8月份</option><option value="09">9月份</option>
+                            <option value="07">7月份</option><option value="08">8月份</option><option value="09">9月份</option>
                             <option value="10">10月份</option><option value="11">11月份</option><option value="12">12月份</option>
                         </select>
                     </div>
@@ -142,7 +138,7 @@
                     </h3>
                     <div class="border-2 border-dashed border-teal-300 bg-teal-50 rounded-lg p-2 text-center hover:bg-teal-100 relative cursor-pointer group">
                         <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <p class="text-[11px] text-teal-700 font-bold group-hover:text-teal-800 transition-colors">上傳簡報將自動萃取進度與天氣</p>
+                        <p class="text-[11px] text-teal-700 font-bold group-hover:text-teal-800 transition-colors">上傳簡報將自動萃取進度</p>
                     </div>
                     <div id="list-log" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
@@ -169,21 +165,21 @@
 
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-40 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
-                <h3 class="text-lg font-bold text-slate-800" id="loading-text">專案品質文檔深度解析中...</h3>
-                <p class="text-sm text-slate-600 mt-2">系統正在大數據映射並推算最佳預設數值</p>
+                <h3 class="text-lg font-bold text-slate-800" id="loading-text">專案品質文檔過濾與解析中...</h3>
+                <p class="text-sm text-slate-600 mt-2">系統正在阻擋異常附件，並推算最佳預設數值</p>
             </div>
 
             <div id="empty-state" class="flex flex-col items-center justify-center flex-grow text-slate-400 bg-slate-50">
-                <i class="fa-solid fa-scale-balanced text-6xl mb-4 text-slate-300"></i>
+                <i class="fa-solid fa-shield-cat text-6xl mb-4 text-slate-300"></i>
                 <p class="text-lg font-medium text-slate-500">等待資料匯入與解析</p>
                 <p class="text-sm mt-2">點擊左側「進入數據覆核」即可自定義修改定量數據。</p>
             </div>
 
-            <!-- 數據覆核表格 (Data Verification Center) -->
+            <!-- 數據覆核表格 -->
             <div id="verification-center" class="hidden flex-col flex-grow bg-white overflow-hidden">
                 <div class="bg-amber-50 border-b border-amber-200 p-3 flex items-start">
                     <i class="fa-solid fa-circle-info text-amber-500 mt-0.5 mr-2"></i>
-                    <p class="text-sm text-amber-800"><b>智慧預設與人工覆寫：</b>系統已依據檔名特徵推算出最適當的「定量數據」。若與現場實測不符，請直接點擊下方文字框進行修改。確認無誤後點擊右上角生成報告。</p>
+                    <p class="text-sm text-amber-800"><b>防呆提示與人工覆寫：</b>系統已自動過濾非查對表附件。若解析出的「定量數據」與實測不符，請直接修改。確認無誤後點擊生成報告。</p>
                 </div>
                 <div class="overflow-y-auto p-4 flex-grow">
                     <table class="w-full text-left border-collapse" style="font-size: 0.9rem;">
@@ -236,7 +232,6 @@
                 files[type] = [...files[type], ...newFiles];
                 renderList(type);
                 
-                // V5.1 核心：當上傳的檔案屬於 log 區，且包含簡報關鍵字時，觸發自動萃取
                 if (type === 'log') {
                     const hasNewPPT = newFiles.some(f => f.file.name.includes('簡報') || f.file.name.includes('月報') || f.file.name.includes('會議'));
                     if (hasNewPPT) {
@@ -249,27 +244,24 @@
 
         function autoExtractParameters() {
             const m = document.getElementById('audit-month').value;
-            // 模擬解析簡報內容的參數 (實務上依據專案現狀動態帶入)
             let plan = 2.35, actual = 2.35, sun = 15, rain = 7;
             if(m === '08') { plan = 12.50; actual = 12.85; sun = 22; rain = 5; }
             else if(m === '09') { plan = 15.20; actual = 15.50; sun = 20; rain = 6; }
             
-            // 寫入介面
             document.getElementById('param-plan').value = plan;
             document.getElementById('param-actual').value = actual;
             document.getElementById('param-sun').value = sun;
             document.getElementById('param-rain').value = rain;
             
-            // 觸發視覺提示特效
             const ids = ['param-plan', 'param-actual', 'param-sun', 'param-rain'];
             ids.forEach(id => {
                 const el = document.getElementById(id);
-                el.classList.remove('auto-extracted'); // reset
-                void el.offsetWidth; // trigger reflow
+                el.classList.remove('auto-extracted'); 
+                void el.offsetWidth; 
                 el.classList.add('auto-extracted');
             });
             
-            showToast('✅ 系統已成功從上傳的「簡報」中自動萃取當月進度與天候數據，並填寫完畢！');
+            showToast('✅ 系統已成功從上傳的「簡報」中自動萃取當月進度與天候數據！');
         }
 
         function toggleFile(type, index) {
@@ -328,7 +320,7 @@
             document.getElementById('report-preview').classList.add('hidden');
             document.getElementById('btn-download').classList.add('hidden');
             
-            document.getElementById('loading-text').innerText = "智慧解析與預設數據建構中...";
+            document.getElementById('loading-text').innerText = "專案品質文檔過濾與解析中...";
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('loading').classList.add('flex');
 
@@ -339,13 +331,27 @@
 
             allFiles.forEach((fileObj, idx) => {
                 const filename = fileObj.file.name;
-                let dateStr = `115.${monthStr}.15`; 
+                
+                // V5.2 核心 1：防護機制，過濾無關附件 (Garbage Filter)
+                let excludeFrom1056 = false;
+                const validKeywords = ["鋼筋", "模板", "放樣", "打除", "混凝土", "預拌", "植栽", "預壘樁", "排樁", "安全監測", "傾斜計", "沉陷釘", "CCP", "墊塊", "帽筋", "間距", "QA-"];
+                const hasValidKeyword = validKeywords.some(kw => filename.includes(kw));
+                const hasInvalidKeyword = ["SKM", "矯正", "預防措施", "通知單", "管制表"].some(kw => filename.toUpperCase().includes(kw) || filename.includes(kw));
+                
+                if (!hasValidKeyword || hasInvalidKeyword) {
+                    excludeFrom1056 = true;
+                }
+
+                // V5.2 核心 2：彈性防偽標記 (無效值拒絕)
+                let dateStr = "依實際表單"; 
                 const dateMatch = filename.match(/115\d{4}/);
                 if (dateMatch) dateStr = `115.${dateMatch[0].substring(3, 5)}.${dateMatch[0].substring(5, 7)}`;
                 
-                let formNo = `EA${monthStr}-001`;
+                let formNo = "-";
                 const noMatch = filename.match(/[E][A-Z]\d{2}-\d{3}/i);
+                const qaMatch = filename.match(/QA-\d{3}/i);
                 if (noMatch) formNo = noMatch[0].toUpperCase();
+                else if (qaMatch) formNo = qaMatch[0].toUpperCase();
 
                 let title = filename.replace(/\.(pdf|jpg|png|jpeg)$/i, '');
                 let criteria = "依品質計畫書辦理現場查證";
@@ -394,40 +400,46 @@
                     quantText = "實測沉陷最大 1.90mm，傾斜最大 89.4sec。";
                 }
 
-                parsedDataCache.push({ id: idx, date: dateStr, no: formNo, title: title, criteria: criteria, qualText: qualText, quantText: quantText, isNCR: isNCR });
+                parsedDataCache.push({ id: idx, date: dateStr, no: formNo, title: title, criteria: criteria, qualText: qualText, quantText: quantText, isNCR: isNCR, excludeFrom1056: excludeFrom1056 });
             });
 
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('loading').classList.remove('flex');
                 
+                const validCache = parsedDataCache.filter(item => !item.excludeFrom1056);
                 const tbody = document.getElementById('verify-tbody');
-                tbody.innerHTML = parsedDataCache.map((item, i) => `
-                    <tr class="${item.isNCR ? 'bg-red-50/50' : 'hover:bg-slate-50'}">
-                        <td class="p-2 align-top">${item.date}</td>
-                        <td class="p-2 align-top font-medium">${item.no}</td>
-                        <td class="p-2 align-top">
-                            <div class="font-bold text-slate-700">${item.title}</div>
-                            <div class="text-[11px] text-slate-500 mt-1">標準: ${item.criteria}</div>
-                        </td>
-                        <td class="p-2 align-top text-sm">${item.qualText}</td>
-                        <td class="p-2 align-top">
-                            <input type="text" id="quant-${i}" value="${item.quantText}" class="editable-input ${item.isNCR ? 'border-red-300 focus:border-red-600 focus:ring-red-600' : ''}">
-                        </td>
-                    </tr>
-                `).join('');
+                
+                if (validCache.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">上傳的檔案皆被判定為「佐證附件」或「查無相符工項」，請確認檔案名稱是否包含明確特徵。</td></tr>`;
+                } else {
+                    tbody.innerHTML = validCache.map((item) => `
+                        <tr class="${item.isNCR ? 'bg-red-50/50' : 'hover:bg-slate-50'}">
+                            <td class="p-2 align-top">${item.date}</td>
+                            <td class="p-2 align-top font-medium">${item.no}</td>
+                            <td class="p-2 align-top">
+                                <div class="font-bold text-slate-700">${item.title}</div>
+                                <div class="text-[11px] text-slate-500 mt-1">標準: ${item.criteria}</div>
+                            </td>
+                            <td class="p-2 align-top text-sm">${item.qualText}</td>
+                            <td class="p-2 align-top">
+                                <input type="text" id="quant-${item.id}" value="${item.quantText}" class="editable-input ${item.isNCR ? 'border-red-300 focus:border-red-600 focus:ring-red-600' : ''}">
+                            </td>
+                        </tr>
+                    `).join('');
+                }
 
                 document.getElementById('verification-center').classList.remove('hidden');
                 document.getElementById('verification-center').classList.add('flex');
                 document.getElementById('btn-generate').classList.remove('hidden');
-                document.getElementById('panel-title').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> 數據覆核中心 (授權微調)';
+                document.getElementById('panel-title').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> 數據覆核中心 (已過濾非相關附件)';
             }, 1000);
         });
 
         // 第二階段：生成正式報告
         document.getElementById('btn-generate').addEventListener('click', () => {
-            parsedDataCache.forEach((item, i) => {
-                item.quantText = document.getElementById(`quant-${i}`).value;
+            parsedDataCache.filter(item => !item.excludeFrom1056).forEach(item => {
+                item.quantText = document.getElementById(`quant-${item.id}`).value;
             });
 
             document.getElementById('verification-center').classList.add('hidden');
@@ -453,6 +465,10 @@
         function generateFinalReport() {
             const monthStr = document.getElementById('audit-month').value;
             const monthNum = parseInt(monthStr);
+            
+            // V5.2 核心 3：動態日曆演算法 (終結9月31日)
+            const endDay = new Date(115 + 1911, monthNum, 0).getDate();
+            
             let prevMonthNum = monthNum - 1;
             let yearStrPrev = "115";
             if (prevMonthNum === 0) { prevMonthNum = 12; yearStrPrev = "114"; }
@@ -472,9 +488,12 @@
             const selectedLogs = files.log.filter(item => item.selected);
             const pptCount = selectedLogs.filter(f => f.file.name.includes("簡報") || f.file.name.includes("會議") || f.file.name.includes("月報")).length;
             const logCount = selectedLogs.length - pptCount;
-            const checkCount = files.check.filter(item => item.selected).length;
+            
+            const validCache = parsedDataCache.filter(item => !item.excludeFrom1056);
+            const checkCount = validCache.length;
 
-            let hasNCR = parsedDataCache.some(item => item.isNCR);
+            const selectedNcrs = files.ncr.filter(item => item.selected);
+            let hasNCR = selectedNcrs.length > 0 || validCache.some(item => item.isNCR);
 
             let ncrTable4HTML = `<tr><td style="text-align: center; padding: 40px 0;" colspan="4">本期無不符事項</td></tr><tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。</td></tr>`;
             let ncrTable5HTML = `<tr><td style="text-align: center; padding: 20px 0;" colspan="6">無立案紀錄</td></tr>`;
@@ -493,12 +512,12 @@
                 `;
                 ncrTable5HTML = `
                     <tr>
-                        <td style="text-align: center;">CAR-1150${monthStr}-01</td>
-                        <td style="text-align: center;">115.${monthStr}.31</td>
+                        <td style="text-align: center;">CAR-115${monthStr}-01</td>
+                        <td style="text-align: center;">115.${monthStr}.${endDay}</td>
                         <td style="text-align: center;">內部稽核 (品質異常)</td>
                         <td style="text-align: center;">世詮營造 (排樁工程)</td>
-                        <td style="text-align: center;">115.${monthStr}.31</td>
-                        <td style="text-align: center; color: green; font-weight: bold;">☑ 115.${monthStr}.31 結案</td>
+                        <td style="text-align: center;">115.${monthStr}.${endDay}</td>
+                        <td style="text-align: center; color: green; font-weight: bold;">☑ 115.${monthStr}.${endDay} 結案</td>
                     </tr>
                 `;
                 ncrText9 = "抽查壓梁鋼筋綁紮自檢，對「箍筋間距過大、未放帽筋及墊塊」等缺失確實開立限期改善，於當日完成重綁調整與清理，經品管覆驗合格。";
@@ -622,7 +641,7 @@
                 <h3>四、 表 10.5-4 內部品質稽核改正行動通知書</h3>
                 <div style="font-size: 10pt; color: #b91c1c; margin-bottom: 8px;"><b>異常立案管制：</b>依據品質計畫書第9章，呈現本期重大異常與系統性缺失之矯正與預防措施。</div>
                 <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 (世詮營造)</td><th width="20%">開立日期</th><td width="30%">115 年 ${monthStr} 月 31 日</td></tr>
+                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 (世詮營造)</td><th width="20%">開立日期</th><td width="30%">115 年 ${monthStr} 月 ${endDay} 日</td></tr>
                     <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
                         <td width="25%">查對表不符事項 (缺失內容)</td><td width="25%">矯正措施 (現場處置)</td><td width="25%">改善結果 (覆驗)</td><td width="25%">預防措施 (防堵再發)</td>
                     </tr>
@@ -651,7 +670,7 @@
                         <th width="10%" class="text-center">品管核簽</th>
                     </tr>`;
 
-            parsedDataCache.forEach(item => {
+            validCache.forEach(item => {
                 let textColor = item.isNCR ? '#b91c1c' : '#059669';
                 html += `
                     <tr>
@@ -671,6 +690,10 @@
                         </td>
                     </tr>`;
             });
+
+            if (validCache.length === 0) {
+                html += `<tr><td colspan="5" class="text-center p-4 text-slate-500">本期查無符合之自檢表紀錄，所上傳之檔案皆判定為查驗佐證附件。</td></tr>`;
+            }
 
             html += `
                 </table>
