@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V5.3</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V6.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,14 +22,13 @@
         .report-table th, .report-table td { border: 1px solid #000000; padding: 8px; vertical-align: top; text-align: left; line-height: 1.5; }
         .report-table th { background-color: #f2f2f2; font-weight: bold; }
         .page-break { page-break-before: always; }
-        .editable-input { width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-size: 0.85rem; color: #334155; transition: border-color 0.2s; }
-        .editable-input:focus { outline: none; border-color: #0f766e; box-shadow: 0 0 0 1px #0f766e; }
+        .editable-textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 8px; font-size: 0.85rem; color: #334155; transition: border-color 0.2s; resize: vertical; min-height: 44px; }
+        .editable-textarea:focus { outline: none; border-color: #0f766e; box-shadow: 0 0 0 1px #0f766e; }
         .auto-extracted { animation: flashHighlight 2s ease-out; }
         @keyframes flashHighlight {
             0% { background-color: #ccfbf1; border-color: #14b8a6; box-shadow: 0 0 0 2px #14b8a6; }
             100% { background-color: #f8fafc; border-color: #cbd5e1; box-shadow: none; }
         }
-        /* 拖曳狀態樣式 */
         .drag-active { background-color: #e2e8f0 !important; border-color: #3b82f6 !important; border-style: solid !important; }
         .drag-active-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; border-style: solid !important; }
         .drag-active-teal { background-color: #ccfbf1 !important; border-color: #14b8a6 !important; border-style: solid !important; }
@@ -39,11 +38,11 @@
     <header class="bg-slate-900 text-white shadow-md relative z-20">
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-ranking-star text-2xl text-amber-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V5.3 拖曳隔離精準版</span></h1>
+                <i class="fa-solid fa-infinity text-2xl text-amber-500"></i>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V6.0 全工程泛用智庫版</span></h1>
             </div>
             <div class="text-sm bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700">
-                <i class="fa-solid fa-object-ungroup mr-1"></i> 獨立拖曳與精準辨識
+                <i class="fa-solid fa-brain mr-1"></i> 無限工項動態萃取
             </div>
         </div>
     </header>
@@ -111,7 +110,6 @@
 
                 <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i> 專案品質文件庫</h2>
                 
-                <!-- 自檢表區 -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
                         <span><i class="fa-solid fa-file-circle-check mr-1"></i> 自主檢查表</span>
@@ -120,12 +118,11 @@
                     <div id="dropzone-check" class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
                         <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <i class="fa-solid fa-cloud-arrow-up text-lg text-slate-400 group-hover:text-blue-500 mb-1 pointer-events-none"></i>
-                        <p class="text-[11px] text-slate-500 pointer-events-none font-medium">點擊或拖曳自檢表至此</p>
+                        <p class="text-[11px] text-slate-500 pointer-events-none font-medium">拖曳任何工項自檢表至此</p>
                     </div>
                     <div id="list-check" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
-                <!-- 缺失單區 -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-red-700 mb-1 flex justify-between">
                         <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 缺失/矯正單 (NCR)</span>
@@ -134,12 +131,11 @@
                     <div id="dropzone-ncr" class="border-2 border-dashed border-red-300 bg-red-50 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
                         <input type="file" id="file-ncr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <i class="fa-solid fa-cloud-arrow-up text-lg text-red-400 group-hover:text-red-600 mb-1 pointer-events-none"></i>
-                        <p class="text-[11px] text-red-600 font-bold pointer-events-none">點擊或拖曳異常單至此</p>
+                        <p class="text-[11px] text-red-600 font-bold pointer-events-none">拖曳異常單至此</p>
                     </div>
                     <div id="list-ncr" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
-                <!-- 施工日誌區 -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
                         <span><i class="fa-solid fa-clipboard-list mr-1"></i> 施工日誌</span>
@@ -152,7 +148,6 @@
                     <div id="list-log" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
-                <!-- 簡報區 (獨立分離) -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-teal-700 mb-1 flex justify-between">
                         <span><i class="fa-solid fa-chalkboard-user mr-1"></i> 週/月會簡報</span>
@@ -161,7 +156,7 @@
                     <div id="dropzone-ppt" class="border-2 border-dashed border-teal-300 bg-teal-50 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
                         <input type="file" id="file-ppt" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <i class="fa-solid fa-wand-magic-sparkles text-lg text-teal-500 group-hover:text-teal-700 mb-1 pointer-events-none"></i>
-                        <p class="text-[11px] text-teal-700 font-bold pointer-events-none">拖曳簡報至此 (自動萃取參數)</p>
+                        <p class="text-[11px] text-teal-700 font-bold pointer-events-none">拖曳簡報 (自動萃取參數)</p>
                     </div>
                     <div id="list-ppt" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
@@ -189,19 +184,20 @@
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-40 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
                 <h3 class="text-lg font-bold text-slate-800" id="loading-text">專案品質文檔過濾與解析中...</h3>
-                <p class="text-sm text-slate-600 mt-2">系統正在阻擋異常附件，並推算最佳預設數值</p>
+                <p class="text-sm text-slate-600 mt-2">系統正在動態萃取工項特徵，並建立泛用智庫</p>
             </div>
 
             <div id="empty-state" class="flex flex-col items-center justify-center flex-grow text-slate-400 bg-slate-50">
-                <i class="fa-solid fa-shield-cat text-6xl mb-4 text-slate-300"></i>
-                <p class="text-lg font-medium text-slate-500">等待資料匯入與解析</p>
-                <p class="text-sm mt-2">點擊左側「進入數據覆核中心」即可自定義修改定量數據。</p>
+                <i class="fa-solid fa-brain text-6xl mb-4 text-slate-300"></i>
+                <p class="text-lg font-medium text-slate-500">等待資料匯入與萬用解析</p>
+                <p class="text-sm mt-2">支援無限工項擴充，定性與定量描述皆可自由覆寫。</p>
             </div>
 
+            <!-- 數據覆核表格 (雙向全開) -->
             <div id="verification-center" class="hidden flex-col flex-grow bg-white overflow-hidden">
                 <div class="bg-amber-50 border-b border-amber-200 p-3 flex items-start">
                     <i class="fa-solid fa-circle-info text-amber-500 mt-0.5 mr-2"></i>
-                    <p class="text-sm text-amber-800"><b>防呆提示與人工覆寫：</b>系統已自動過濾非查對表附件。若解析出的「定量數據」與實測不符，請直接修改。確認無誤後點擊生成報告。</p>
+                    <p class="text-sm text-amber-800"><b>V6.0 全面授權編輯：</b>系統已動態抓取工程特徵。若對預設的「定性描述」或「定量數據」有實務補充需求，請直接點擊文字方塊進行修改。</p>
                 </div>
                 <div class="overflow-y-auto p-4 flex-grow">
                     <table class="w-full text-left border-collapse" style="font-size: 0.9rem;">
@@ -209,9 +205,9 @@
                             <tr class="bg-slate-100 text-slate-600 border-b-2 border-slate-300">
                                 <th class="p-2 w-16">日期</th>
                                 <th class="p-2 w-24">表單編號</th>
-                                <th class="p-2 w-1/3">檔案名稱 / 解析工項</th>
-                                <th class="p-2">定性描述 (系統推斷)</th>
-                                <th class="p-2 w-1/4">定量數據覆寫 (實測值) <i class="fa-solid fa-pen text-teal-600 ml-1"></i></th>
+                                <th class="p-2 w-1/4">檔案名稱 / 解析工項</th>
+                                <th class="p-2 w-1/4">定性描述覆寫 <i class="fa-solid fa-pen text-teal-600 ml-1"></i></th>
+                                <th class="p-2 w-1/4">定量數據覆寫 <i class="fa-solid fa-pen text-teal-600 ml-1"></i></th>
                             </tr>
                         </thead>
                         <tbody id="verify-tbody" class="divide-y divide-slate-200 text-slate-800">
@@ -237,7 +233,6 @@
             }
         });
 
-        // 獨立四大分類
         const files = { log: [], ppt: [], check: [], ncr: [] };
         let parsedDataCache = []; 
 
@@ -248,35 +243,29 @@
             setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
-        // --- 全新原生拖曳上傳引擎 ---
+        // --- 拖曳上傳引擎 ---
         function setupDragAndDrop(type) {
             const dropZone = document.getElementById(`dropzone-${type}`);
             const fileInput = document.getElementById(`file-${type}`);
             
-            // 決定高亮樣式
             let hoverClass = 'drag-active';
             if(type === 'ncr') hoverClass = 'drag-active-red';
             if(type === 'ppt') hoverClass = 'drag-active-teal';
 
-            // 點擊上傳
             fileInput.addEventListener('change', (e) => handleFiles(type, e.target.files));
 
-            // 拖曳事件
             dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 dropZone.classList.add(hoverClass);
             });
 
             dropZone.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 dropZone.classList.remove(hoverClass);
             });
 
             dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 dropZone.classList.remove(hoverClass);
                 handleFiles(type, e.dataTransfer.files);
             });
@@ -287,7 +276,6 @@
             files[type] = [...files[type], ...newFiles];
             renderList(type);
             
-            // 只要檔案進入 PPT 區，強制執行萃取
             if (type === 'ppt' && newFiles.length > 0) {
                 autoExtractParameters();
             }
@@ -348,7 +336,6 @@
             `).join('');
         }
 
-        // 初始化拖曳引擎
         setupDragAndDrop('check');
         setupDragAndDrop('ncr');
         setupDragAndDrop('log');
@@ -382,7 +369,7 @@
             document.getElementById('report-preview').classList.add('hidden');
             document.getElementById('btn-download').classList.add('hidden');
             
-            document.getElementById('loading-text').innerText = "專案品質文檔過濾與解析中...";
+            document.getElementById('loading-text').innerText = "V6.0 全工程萬用解析引擎運作中...";
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('loading').classList.add('flex');
 
@@ -394,12 +381,13 @@
             allFiles.forEach((fileObj, idx) => {
                 const filename = fileObj.file.name;
                 
+                // V6.0 絕對過濾機制：只認表單號或"自檢/檢查/查驗/QA/缺失/異常"
                 let excludeFrom1056 = false;
-                const validKeywords = ["鋼筋", "模板", "放樣", "打除", "混凝土", "預拌", "植栽", "預壘樁", "排樁", "安全監測", "傾斜計", "沉陷釘", "CCP", "墊塊", "帽筋", "間距", "QA-"];
-                const hasValidKeyword = validKeywords.some(kw => filename.includes(kw));
-                const hasInvalidKeyword = ["SKM", "矯正", "預防措施", "通知單", "管制表"].some(kw => filename.toUpperCase().includes(kw) || filename.includes(kw));
+                const hasFormNumber = filename.match(/[E][A-Z]\d{2}-\d{3}/i) !== null;
+                const hasQualityKeyword = ["自檢", "檢查", "抽驗", "查驗", "QA-", "缺失", "異常", "矯正"].some(kw => filename.includes(kw));
+                const hasInvalidKeyword = ["SKM", "通知單", "管制表"].some(kw => filename.toUpperCase().includes(kw));
                 
-                if (!hasValidKeyword || hasInvalidKeyword) {
+                if (!(hasFormNumber || hasQualityKeyword) || hasInvalidKeyword) {
                     excludeFrom1056 = true;
                 }
 
@@ -414,26 +402,42 @@
                 else if (qaMatch) formNo = qaMatch[0].toUpperCase();
 
                 let title = filename.replace(/\.(pdf|jpg|png|jpeg)$/i, '');
-                let criteria = "依品質計畫書辦理現場查證";
-                let qualText = "外觀及工法符合標準。";
-                let quantText = "實測各項數值皆控制於規範容許範圍內。";
                 let isNCR = false;
+                let textColor = "#059669";
+                
+                // --- V6.0 萬用萃取邏輯 ---
+                // 拔除無關字眼，抓出核心工程名稱
+                let coreSubject = title
+                    .replace(/[E][A-Z]\d{2}-\d{3}/i, '') 
+                    .replace(/QA-\d{3}/i, '') 
+                    .replace(/115\d{4}/, '') 
+                    .replace(/施工[前後中]自檢|自主檢查表|施工紀錄|抽驗紀錄|品質檢查/g, '')
+                    .replace(/[-_()]/g, ' ')
+                    .trim();
+                
+                if(!coreSubject || coreSubject.length < 2) coreSubject = "該項工程";
+                
+                // 預設萬用輸出
+                let criteria = `查核「${coreSubject}」是否依品質計畫書辦理現場查證`;
+                let qualText = `依施工圖說施作，外觀、材質及工法均符合標準。`;
+                let quantText = `現場實測各項數值皆控制於規範容許範圍內。`;
 
-                if (filename.includes("墊塊") || filename.includes("QA-009") || filename.includes("預留保護層")) {
+                // 保留經典工項的精準智庫，找不到的就吃上面的萬用輸出
+                if (filename.includes("墊塊") || filename.includes("預留保護層")) {
                     criteria = "查核壓梁鋼筋是否預留保護層及放置墊塊";
                     qualText = "缺失改善：已派員置入水泥墊塊完成。";
                     quantText = "實測保護層厚度大於規範最低要求。";
-                    isNCR = true;
-                } else if (filename.includes("帽筋") || filename.includes("QA-008")) {
+                    isNCR = true; textColor = "#b91c1c";
+                } else if (filename.includes("帽筋")) {
                     criteria = "查核壓梁箍筋綁紮及帽筋放置";
                     qualText = "缺失改善：已補放帽筋並綁紮完成。";
                     quantText = "實測主/箍筋支數與圖說相符。";
-                    isNCR = true;
-                } else if (filename.includes("間距") || filename.includes("QA-005")) {
+                    isNCR = true; textColor = "#b91c1c";
+                } else if (filename.includes("QA-005")) {
                     criteria = "查核壓梁箍筋間距是否符合 #4@15cm";
                     qualText = "缺失改善：鬆開鐵線調整至設計間距並加固。";
                     quantText = "實測箍筋間距已縮減至標準 15cm。";
-                    isNCR = true;
+                    isNCR = true; textColor = "#b91c1c";
                 } else if (filename.includes("放樣") || filename.includes("定位")) {
                     criteria = "查核樁位檢測，容許誤差 ±3cm";
                     qualText = "樁心定位標示清晰，符圖說位置。";
@@ -454,13 +458,19 @@
                     criteria = "查驗 50*50*50mm³ 方塊試體取樣及間隔時間";
                     qualText = "確認拌合比例正確，澆置過程連續。";
                     quantText = "實測澆置間隔未超過 3 分鐘，試體已取樣。";
-                } else if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘")) {
-                    criteria = "確認沉陷觀測值及各項監測儀器數值低於警戒值";
+                } else if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘") || filename.includes("觀測") || filename.includes("傾度") || filename.includes("水位")) {
+                    criteria = "確認變位觀測值及各項監測儀器數值是否低於警戒值";
                     qualText = "監測儀器運作正常無受損，數據紀錄穩定。";
-                    quantText = "實測沉陷最大 1.90mm，傾斜最大 89.4sec。";
+                    quantText = "實測各向變位及沉陷數值均遠低於警戒值。";
+                } else if (filename.includes("QA-") || filename.includes("缺失") || filename.includes("異常")) {
+                    // 通用異常單解析
+                    criteria = `針對「${coreSubject}」缺失項目進行改善追蹤`;
+                    qualText = `缺失改善：現場已針對不符事項完成調整與修繕。`;
+                    quantText = `經品管人員覆驗，實測數值已符合圖說規範。`;
+                    isNCR = true; textColor = "#b91c1c";
                 }
 
-                parsedDataCache.push({ id: idx, date: dateStr, no: formNo, title: title, criteria: criteria, qualText: qualText, quantText: quantText, isNCR: isNCR, excludeFrom1056: excludeFrom1056 });
+                parsedDataCache.push({ id: idx, date: dateStr, no: formNo, title: title, criteria: criteria, qualText: qualText, quantText: quantText, isNCR: isNCR, textColor: textColor, excludeFrom1056: excludeFrom1056 });
             });
 
             setTimeout(() => {
@@ -471,8 +481,9 @@
                 const tbody = document.getElementById('verify-tbody');
                 
                 if (validCache.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">上傳的檔案皆被判定為「佐證附件」或「查無相符工項」，請確認檔案名稱是否包含明確特徵。</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">上傳的檔案皆被判定為「佐證附件」，請確認檔案名稱是否包含明確的自檢表號或檢查關鍵字。</td></tr>`;
                 } else {
+                    // V6.0 核心：雙維度全開放編輯
                     tbody.innerHTML = validCache.map((item) => `
                         <tr class="${item.isNCR ? 'bg-red-50/50' : 'hover:bg-slate-50'}">
                             <td class="p-2 align-top">${item.date}</td>
@@ -481,9 +492,11 @@
                                 <div class="font-bold text-slate-700">${item.title}</div>
                                 <div class="text-[11px] text-slate-500 mt-1">標準: ${item.criteria}</div>
                             </td>
-                            <td class="p-2 align-top text-sm">${item.qualText}</td>
                             <td class="p-2 align-top">
-                                <input type="text" id="quant-${item.id}" value="${item.quantText}" class="editable-input ${item.isNCR ? 'border-red-300 focus:border-red-600 focus:ring-red-600' : ''}">
+                                <textarea id="qual-${item.id}" class="editable-textarea ${item.isNCR ? 'border-red-300 focus:border-red-600 focus:ring-red-600' : ''}">${item.qualText}</textarea>
+                            </td>
+                            <td class="p-2 align-top">
+                                <textarea id="quant-${item.id}" class="editable-textarea ${item.isNCR ? 'border-red-300 focus:border-red-600 focus:ring-red-600' : ''}">${item.quantText}</textarea>
                             </td>
                         </tr>
                     `).join('');
@@ -492,13 +505,15 @@
                 document.getElementById('verification-center').classList.remove('hidden');
                 document.getElementById('verification-center').classList.add('flex');
                 document.getElementById('btn-generate').classList.remove('hidden');
-                document.getElementById('panel-title').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> 數據覆核中心 (已過濾非相關附件)';
+                document.getElementById('panel-title').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> 數據覆核中心 (雙維度全面授權)';
             }, 1000);
         });
 
         // 第二階段：生成正式報告
         document.getElementById('btn-generate').addEventListener('click', () => {
+            // 回收人工覆寫的定性與定量數據
             parsedDataCache.filter(item => !item.excludeFrom1056).forEach(item => {
+                item.qualText = document.getElementById(`qual-${item.id}`).value;
                 item.quantText = document.getElementById(`quant-${item.id}`).value;
             });
 
@@ -553,16 +568,16 @@
 
             let ncrTable4HTML = `<tr><td style="text-align: center; padding: 40px 0;" colspan="4">本期無不符事項</td></tr><tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。</td></tr>`;
             let ncrTable5HTML = `<tr><td style="text-align: center; padding: 20px 0;" colspan="6">無立案紀錄</td></tr>`;
-            let ncrText9 = "抽查發現之微小偏差（如放樣點輕微偏移）已即時於現場完成調整至規範要求，無重大缺失。";
+            let ncrText9 = "抽查發現之微小偏差已即時於現場完成調整至規範要求，無重大缺失。";
             let ncrText10 = "本月份各項自檢項目除上述微小缺失外均合格，無開立重大缺失不合格管制單，故無此複查照片。";
 
             if (hasNCR) {
                 ncrTable4HTML = `
                     <tr>
-                        <td style="padding: 10px;"><b>不符事項：</b><br>擋土排樁工程(預壘樁)壓梁鋼筋綁紮屢次未依圖說施工。同性質缺失(箍筋間距過大、帽筋未放、未放墊塊)累計發生達3次以上，屬系統性異常。</td>
-                        <td style="padding: 10px;"><b>矯正措施：</b><br>現場已立即派員將帽筋補放、水泥墊塊置入，並將鋼筋間距調整補綁完成。</td>
+                        <td style="padding: 10px;"><b>不符事項：</b><br>工程施工品質與圖說不符，或經抽查發現累計同性質缺失達系統性異常標準。</td>
+                        <td style="padding: 10px;"><b>矯正措施：</b><br>現場已立即要求協力廠商派員進行缺失修繕，並重新調整至圖說規範要求。</td>
                         <td style="padding: 10px;"><b>改善結果：</b><br>經品管工程師現場查核複驗，缺失已全數改善完畢，各項實測數值符合設計規範。</td>
-                        <td style="padding: 10px;"><b>預防措施：</b><br>1. 開檢討會加強宣導圖說重點(#4@15cm)。<br>2. 提升現場工程師巡視頻率，內部自檢合格方可報驗。</td>
+                        <td style="padding: 10px;"><b>預防措施：</b><br>1. 召開檢討會加強宣導圖說重點與施工標準。<br>2. 提升現場工程師巡視頻率，內部自檢合格方可報驗。</td>
                     </tr>
                     <tr><td colspan="4">備註：☑ 本單依據《品質計畫書第9章 矯正與預防措施》開立並結案。</td></tr>
                 `;
@@ -571,13 +586,13 @@
                         <td style="text-align: center;">CAR-115${monthStr}-01</td>
                         <td style="text-align: center;">115.${monthStr}.${endDay}</td>
                         <td style="text-align: center;">內部稽核 (品質異常)</td>
-                        <td style="text-align: center;">世詮營造 (排樁工程)</td>
+                        <td style="text-align: center;">相關協力廠商</td>
                         <td style="text-align: center;">115.${monthStr}.${endDay}</td>
                         <td style="text-align: center; color: green; font-weight: bold;">☑ 115.${monthStr}.${endDay} 結案</td>
                     </tr>
                 `;
-                ncrText9 = "抽查壓梁鋼筋綁紮自檢，對「箍筋間距過大、未放帽筋及墊塊」等缺失確實開立限期改善，於當日完成重綁調整與清理，經品管覆驗合格。";
-                ncrText10 = "本月重大異常及微小缺失皆已於不合格品改善照片表中檢附改善前後相片，並歸檔結案。";
+                ncrText9 = "本期針對現場查驗發現之缺失，已確實開立限期改善單，於指定時間內完成修繕與清理，經品管覆驗合格。";
+                ncrText10 = "本月異常缺失皆已於不合格品改善照片表中檢附改善前後相片，並歸檔結案。";
             }
 
             let logCrossCheckText = logCount > 0 
@@ -591,17 +606,17 @@
             let dynamicInsights = "";
             let weatherAdvice = "";
             if (roles.engineer) {
-                dynamicInsights += `1. 【現場查驗與防護落實】：帽梁劣質混凝土敲除後之清理，必須將鋼筋表面及槽底敲除渣土清理乾淨，並在澆置前進行沖水濕潤。鋼筋籠吊放前，應確實配置混凝土墊塊或鋼筋間隔器，確保保護層足夠並防止吊裝變形。\n`;
+                dynamicInsights += `1. 【現場查驗與防護落實】：各項結構體及地工設施施作前，必須將工作面及槽底渣土清理乾淨，並在澆置前進行沖水濕潤。鋼筋籠及相關設施吊裝前，應確實配置墊塊或間隔器，確保保護層足夠並防止變形。\n`;
             }
             if (roles.qa) {
                 if(hasNCR) {
-                    dynamicInsights += `2. 【異常防堵與糾正】：針對下包廠商壓梁鋼筋綁紮屢次發生漏放帽筋與墊塊之情事，品管小組已依規定開立異常單，並要求加強現場巡視，自檢合格方可報驗，防堵系統性缺失蔓延。\n`;
+                    dynamicInsights += `2. 【異常防堵與糾正】：針對下包廠商屢次發生之施工品質缺失，品管小組已依規定開立異常單，並要求加強現場巡視，自檢合格方可報驗，防堵系統性缺失蔓延。\n`;
                 }
-                dynamicInsights += `3. 【品質系統與溯源面】：大宗材料均依檢驗停留點（Hold Point）確實進場查驗。抽查現場砂漿拌合作業紀錄，確認現場係嚴格依據「斗仔的體積」進行精準容積配比計算，而非單純重量比。品管工程師皆有確實會同監造人員入鏡拍照，佐證查驗事實。\n`;
+                dynamicInsights += `3. 【品質系統與溯源面】：大宗材料均依檢驗停留點（Hold Point）確實進場查驗。抽查現場拌合作業紀錄，確認現場係嚴格依據品質計畫進行精準容積配比計算，而非單純重量比。品管工程師皆有確實會同監造人員入鏡拍照，佐證查驗事實。\n`;
             }
             if (roles.director) {
                 if (monthNum >= 5 && monthNum <= 10) {
-                    weatherAdvice = `因應夏日防汛與颱風頻發期間，請工區做好排水溝清淤與防汛抽水機整備作業，並隨時注意歷史建物沉陷監測數據的變化。`;
+                    weatherAdvice = `因應夏日防汛與颱風頻發期間，請工區做好排水溝清淤與防汛抽水機整備作業，並隨時注意各項變位監測數據的變化。`;
                 } else if (monthNum >= 2 && monthNum <= 4) {
                     weatherAdvice = `時值春雨梅雨季節，應加強洗車台沉砂池及工區外排水溝之清淤，落實防汛整備作業。`;
                 } else {
@@ -622,7 +637,7 @@
                     <tr><th colspan="4" class="bg-slate-100">品質稽核項目與範圍</th></tr>
                     <tr><td colspan="4">
                         <div style="line-height: 1.8;">
-                            1. 本月份各項主體工程之施工品質自主檢查與紀錄 (含定位放樣、鑽掘深度、垂直度控制及直徑檢測)。<br>
+                            1. 本月份各項主體工程及設施之施工品質自主檢查與紀錄 (含定位放樣、尺寸高程檢測及工法控制)。<br>
                             2. 結構體或地工設施之鋼筋籠製作與綁紮品質自檢 (包含主筋直徑、主筋支數、箍筋間距及搭接長度)。<br>
                             3. 全區及各階段安全監測系統（沉陷觀測、傾斜計等）日常監控紀錄查驗。<br>
                             4. 大宗材料（如混凝土、砂漿、鋼筋等）進場檢驗與試體取樣之落實度。
@@ -638,19 +653,19 @@
                     <tr><th width="20%">受稽核單位</th><td width="30%">施工組 全體</td><th width="20%">稽核日期</th><td width="30%">115 年 ${monthStr} 月 25 日</td></tr>
                     <tr><td colspan="4">要項敘述：針對${monthNum}月份彙整之 <b>${checkCount}份自主檢查表、${logCount}份施工日誌與 ${pptCount}份簡報</b> 進行三維度交叉驗證。</td></tr>
                     <tr><th class="text-center" width="5%">項次</th><th width="30%">稽核細項 (品質計畫書標準 1-18)</th><th class="text-center" width="10%">稽核結果</th><th width="55%">量化事實陳述與佐證數據</th></tr>
-                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對本期放樣自檢表，實測樁心偏位符合設計允許 ≦3cm 範圍。</td></tr>
+                    <tr><td class="text-center">1</td><td>檢查位置是否正確？</td><td class="text-center font-bold">○符合</td><td>經核對本期各項自檢表，實測偏位均符合設計圖說允許範圍。</td></tr>
                     <tr><td class="text-center">2</td><td>檢查日期是否正確？</td><td class="text-center font-bold">○符合</td><td>現場抽查之自主檢查表填寫日期，經核對確實與施工日誌登載之施作日期完全一致。</td></tr>
                     <tr><td class="text-center">3</td><td>檢查時機是否合宜？</td><td class="text-center font-bold">○符合</td><td>施作前均先落實定位放樣自檢；材料送驗均於使用前依合約規定取樣，時機皆符合規範。</td></tr>
-                    <tr><td class="text-center">4</td><td>檢查結果是否正確？</td><td class="text-center font-bold">○符合</td><td>各抽查項目如鑽掘垂直度及鋼筋主筋數量，其自檢結果均正確，符合規範要求。</td></tr>
-                    <tr><td class="text-center">5</td><td>實際檢查情形是否量化？</td><td class="text-center font-bold">○符合</td><td>自檢表均確實填寫量化數據。如實測預壘樁垂直度優於 1/100 傾斜率規範；直徑與套管規格皆確實量測。</td></tr>
+                    <tr><td class="text-center">4</td><td>檢查結果是否正確？</td><td class="text-center font-bold">○符合</td><td>各抽查項目如鋼筋主筋數量、模板組立高程等，其自檢結果均正確，符合規範要求。</td></tr>
+                    <tr><td class="text-center">5</td><td>實際檢查情形是否量化？</td><td class="text-center font-bold">○符合</td><td>自檢表均確實填寫量化數據。各項外觀尺寸及材料規格皆確實量測並落入容許差內。</td></tr>
                     <tr><td class="text-center">6</td><td>內容是否填寫完整？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之檢查項目、設計與標準、實際數值及檢查結果均填寫完整。</td></tr>
-                    <tr><td class="text-center">7</td><td>檢查結果是否與現場情形一致？</td><td class="text-center font-bold">○符合</td><td>現場隨機抽查施作中之樁體，其鑽掘深度、鋼筋籠配置間距等與檢查表紀錄完全相符。</td></tr>
+                    <tr><td class="text-center">7</td><td>檢查結果是否與現場情形一致？</td><td class="text-center font-bold">○符合</td><td>現場隨機抽查施作中之工程體，其配置間距、尺寸等與檢查表紀錄完全相符。</td></tr>
                     <tr><td class="text-center">8</td><td>工地現場施工檢查人員是否簽名？</td><td class="text-center font-bold">○符合</td><td>各自主檢查表之現場施工主管、檢查人員及工地主任均有確實親筆簽章。</td></tr>
                     <tr><td class="text-center">9</td><td>缺失是否進行追蹤改善？</td><td class="text-center font-bold">○符合</td><td>${ncrText9}</td></tr>
                     <tr><td class="text-center">10</td><td>缺失複查是否有檢附改善前中後相片？</td><td class="text-center font-bold">○符合</td><td>${ncrText10}</td></tr>
-                    <tr><td class="text-center">11</td><td>施工材料品質自檢文件是否分類歸檔？</td><td class="text-center font-bold">○符合</td><td>水泥、機制砂、鋼筋等進場材料自主檢查紀錄與物性試驗報告均已完整分類登錄，並妥善歸檔。</td></tr>
+                    <tr><td class="text-center">11</td><td>施工材料品質自檢文件是否分類歸檔？</td><td class="text-center font-bold">○符合</td><td>水泥、砂石、鋼筋等進場材料自主檢查紀錄與物性試驗報告均已完整分類登錄，並妥善歸檔。</td></tr>
                     <tr><td class="text-center">12</td><td>文件及紀錄查證是否確實依流程執行？</td><td class="text-center font-bold">○符合</td><td>經查證，材料抽驗申請表、物性試驗送檢及施工自檢文件均嚴格依據品質計畫書之作業流程執行。</td></tr>
-                    <tr><td class="text-center">13</td><td>建築物施工日誌是否確實填寫？</td><td class="text-center font-bold">○符合</td><td>施工日誌確實按日填報，詳細記載氣候、工人工數、機具使用及施工項目。排樁完成數量登載確實。</td></tr>
+                    <tr><td class="text-center">13</td><td>建築物施工日誌是否確實填寫？</td><td class="text-center font-bold">○符合</td><td>施工日誌確實按日填報，詳細記載氣候、工人工數、機具使用及施工項目。各項完成數量登載確實。</td></tr>
                     <tr><td class="text-center">14</td><td>施工材料自主檢查是否確實？</td><td class="text-center font-bold">○符合</td><td>鋼筋主筋與箍筋間距量測確實，大宗材料進場時確實執行查驗，方塊試體取樣組數完全符合頻率。</td></tr>
                     <tr><td class="text-center">15</td><td>勤前教育紀錄？</td><td class="text-center font-bold">○符合</td><td>每日早上施工前均確實實施勤前教育及安全危害告知，並登載於每日施工日誌中。</td></tr>
                     <tr><td class="text-center">16</td><td>施工材料缺失改善成效及矯正預防？</td><td class="text-center font-bold">○符合</td><td>本月進場之鋼筋、水泥及砂等材料，出廠證明與強度等試驗結果均合格，無不合格材料退貨缺失。</td></tr>
@@ -678,10 +693,10 @@
                     <tr><th colspan="4" class="bg-slate-100">品質稽核執行情形說明：</th></tr>
                     <tr><td colspan="4">
                         1. 分項工程施作與品質控制：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 擋土排樁與預壘樁工程：進行套管鑽掘。垂直度控制實測符合規範 (≦0.57°/套管內 ≦1/200)，注漿澆置時間嚴格控制於 2~3 分鐘內（規範 ≦3分鐘），品質合格。<br>
-                        &nbsp;&nbsp;&nbsp;(2) 結構體與排樁放樣：執行結構體與全區點位放樣。基準點偏位 N, E 皆小於規範 ≦1.0cm，放樣位置精準。<br>
+                        &nbsp;&nbsp;&nbsp;(1) 結構與地工設施工程：本月進行各項主體作業。施工控制與檢測實測均符合規範，注漿或澆置時間嚴格控制，品質合格。<br>
+                        &nbsp;&nbsp;&nbsp;(2) 結構體與點位放樣：執行結構體與全區點位放樣。基準點偏位 N, E 皆小於規範 ≦1.0cm，放樣位置精準。<br>
                         2. 重要會驗與外檢活動：<br>
-                        &nbsp;&nbsp;&nbsp;(1) 專任工程人員督察：進行走動式管理與品管稽查；現場督導高程放樣及鋼筋籠品質，均無重大缺失。<br>
+                        &nbsp;&nbsp;&nbsp;(1) 專任工程人員督察：進行走動式管理與品管稽查；現場督導各項施作高程及材料品質，均無重大缺失。<br>
                         &nbsp;&nbsp;&nbsp;(2) 試驗取樣：依規範進行各項材料物性試驗與混凝土28天抗壓試驗，強度符合設計規範。<br>
                         3. 三維度交叉驗證：<br>
                         &nbsp;&nbsp;&nbsp;${logCrossCheckText}<br>
@@ -697,7 +712,7 @@
                 <h3>四、 表 10.5-4 內部品質稽核改正行動通知書</h3>
                 <div style="font-size: 10pt; color: #b91c1c; margin-bottom: 8px;"><b>異常立案管制：</b>依據品質計畫書第9章，呈現本期重大異常與系統性缺失之矯正與預防措施。</div>
                 <table class="report-table">
-                    <tr><th width="20%">受稽核單位</th><td width="30%">施工組 (世詮營造)</td><th width="20%">開立日期</th><td width="30%">115 年 ${monthStr} 月 ${endDay} 日</td></tr>
+                    <tr><th width="20%">受稽核單位</th><td width="30%">各施工承攬廠商</td><th width="20%">開立日期</th><td width="30%">115 年 ${monthStr} 月 ${endDay} 日</td></tr>
                     <tr style="background-color: #f3f4f6; text-align: center; font-weight: bold;">
                         <td width="25%">查對表不符事項 (缺失內容)</td><td width="25%">矯正措施 (現場處置)</td><td width="25%">改善結果 (覆驗)</td><td width="25%">預防措施 (防堵再發)</td>
                     </tr>
@@ -727,7 +742,6 @@
                     </tr>`;
 
             validCache.forEach(item => {
-                let textColor = item.isNCR ? '#b91c1c' : '#059669';
                 html += `
                     <tr>
                         <td class="text-center align-middle">${item.date}</td>
@@ -738,7 +752,7 @@
                         </td>
                         <td class="align-middle" style="line-height: 1.6;">
                             <b>【定性】</b>${item.qualText}<br>
-                            <span style="color: ${textColor}; font-weight: bold;"><b>【定量】</b>${item.quantText}</span>
+                            <span style="color: ${item.textColor}; font-weight: bold;"><b>【定量】</b>${item.quantText}</span>
                         </td>
                         <td class="text-center align-middle" style="color: #334155; font-weight: bold; font-size: 10pt;">
                             合格 (O)<br>
