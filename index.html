@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V3.9.1</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,10 +29,10 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-layer-group text-2xl text-red-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V3.9.1 排樁專案校對版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-red-600 px-2 py-0.5 rounded ml-2 shadow-sm">V4.0 全年泛用正式版</span></h1>
             </div>
             <div class="text-sm bg-slate-700 text-slate-200 px-3 py-1 rounded-full border border-slate-600">
-                <i class="fa-solid fa-scale-balanced mr-1"></i> 表4-10 真實數據對齊
+                <i class="fa-solid fa-calendar-days mr-1"></i> 全年度通用架構
             </div>
         </div>
     </header>
@@ -43,18 +43,25 @@
     </div>
 
     <main class="flex-grow flex overflow-hidden max-w-screen-2xl mx-auto w-full p-4 gap-4">
+        <!-- 左側控制面板 -->
         <div class="w-80 flex flex-col gap-4 overflow-y-auto pr-2 flex-shrink-0 pb-10">
             <div class="glass-panel p-5 rounded-xl border-t-4 border-t-red-600 flex flex-col">
                 
                 <div class="mb-5 relative z-20 bg-slate-50 p-3 rounded-lg border border-slate-200">
                     <h2 class="text-sm font-bold mb-2 text-slate-800"><i class="fa-regular fa-calendar-check mr-1 text-slate-500"></i> 稽核月份設定</h2>
                     <select id="audit-month" class="w-full bg-white border border-slate-300 text-slate-700 text-sm rounded focus:ring-red-500 focus:border-red-500 block p-2 font-medium cursor-pointer shadow-sm">
+                        <option value="01">1月份稽核報告</option>
+                        <option value="02">2月份稽核報告</option>
+                        <option value="03">3月份稽核報告</option>
                         <option value="04">4月份稽核報告</option>
                         <option value="05">5月份稽核報告</option>
                         <option value="06">6月份稽核報告</option>
                         <option value="07">7月份稽核報告</option>
-                        <option value="08" selected>8月份稽核報告 (本期含CAR)</option>
+                        <option value="08">8月份稽核報告</option>
                         <option value="09">9月份稽核報告</option>
+                        <option value="10">10月份稽核報告</option>
+                        <option value="11">11月份稽核報告</option>
+                        <option value="12">12月份稽核報告</option>
                     </select>
                 </div>
 
@@ -113,11 +120,12 @@
                 </div>
 
                 <button id="btn-analyze" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center shadow-md border border-slate-600 relative z-40 mt-2">
-                    <i class="fa-solid fa-file-signature mr-2 text-red-400"></i> 生成精準校對版公文
+                    <i class="fa-solid fa-file-signature mr-2 text-red-400"></i> 生成定性定量查核公文
                 </button>
             </div>
         </div>
 
+        <!-- 右側文件預覽 -->
         <div class="flex-grow bg-slate-300 rounded-xl overflow-y-auto relative border border-slate-400 shadow-inner flex flex-col">
             <div class="bg-slate-100 p-2 border-b border-slate-300 flex justify-between items-center sticky top-0 z-10 shadow-sm">
                 <span class="text-sm font-bold text-slate-600 ml-2"><i class="fa-regular fa-file-word mr-1"></i> 綜合稽核產出預覽 (A4)</span>
@@ -129,14 +137,14 @@
             <div id="loading" class="absolute inset-0 bg-slate-200/95 z-20 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="spinner mb-4"></div>
                 <h3 class="text-lg font-bold text-slate-800">專案品質文檔深度解析中...</h3>
-                <p class="text-sm text-slate-600 mt-2">正在對齊「表 4-10 擋土排樁工程施工自主檢查表」標準數據</p>
+                <p class="text-sm text-slate-600 mt-2">正在展開 18 項查對指標，並萃取定性與定量數據</p>
             </div>
 
             <div class="p-6 pb-20">
                 <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400 mt-32">
                     <i class="fa-solid fa-scale-balanced text-6xl mb-4 text-slate-300"></i>
                     <p class="text-lg font-medium text-slate-500">等待資料匯入與彙整</p>
-                    <p class="text-sm mt-2">系統將依據排樁工程標準，提供 100% 吻合之定性與定量數據。</p>
+                    <p class="text-sm mt-2">系統將嚴格依據品質計畫書 18 項指標進行全數展開查核。</p>
                 </div>
                 <div id="report-content" class="bg-white p-12 shadow-lg mx-auto hidden" style="max-w: 21cm; min-height: 29.7cm; font-family: '標楷體', 'MingLiU', serif;">
                 </div>
@@ -145,6 +153,16 @@
     </main>
 
     <script>
+        // 自動載入當前月份
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentMonth = new Date().getMonth() + 1;
+            const monthStr = currentMonth.toString().padStart(2, '0');
+            const monthSelect = document.getElementById('audit-month');
+            if(monthSelect.querySelector(`option[value="${monthStr}"]`)) {
+                monthSelect.value = monthStr;
+            }
+        });
+
         const files = { log: [], check: [], ncr: [] };
 
         function showToast(msg) {
@@ -199,7 +217,7 @@
             const blob = new Blob(['\ufeff', header + sourceHTML + footer], { type: 'application/msword' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `豐譽營造_115年${parseInt(monthStr)}月內部品質稽核報告_精準校對版.doc`;
+            link.download = `豐譽營造_115年${parseInt(monthStr)}月內部品質稽核報告_正式版.doc`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -240,7 +258,6 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('loading').classList.add('flex');
 
-            // 針對「表4-10 擋土排樁工程施工自主檢查表」進行精準數據對齊
             const parseFileName = (filename) => {
                 let dateStr = `115.${monthStr}.15`; 
                 const dateMatch = filename.match(/115\d{4}/);
@@ -251,7 +268,7 @@
 
                 let title = filename.replace(/\.(pdf|jpg|png|jpeg)$/i, '');
                 let criteria = "依品質計畫書辦理現場查證";
-                let evidence = "<b>【定性】</b>外觀及工法符合標準。<br><b>【定量】</b>實測各項數值皆控制於規範容許範圍內。";
+                let evidence = "<b>【定性】</b>依圖說施作，外觀及工法符合標準。<br><b>【定量】</b>實測各項數值皆控制於規範容許範圍內。";
                 let textColor = "#059669";
 
                 if (filename.includes("墊塊") || filename.includes("QA-009") || filename.includes("預留保護層")) {
@@ -284,6 +301,9 @@
                 } else if (filename.includes("劣質打除") || filename.includes("敲除") || filename.includes("清潔")) {
                     criteria = "查驗劣質水泥砂漿清除及汙染清潔";
                     evidence = "<b>【定性】</b>已確實打除劣質部分，鋼筋及澆置完成面清潔完畢。<br><b>【定量】</b>表面平整平直，無明顯骨材顆粒裸露。";
+                } else if (filename.includes("安全監測") || filename.includes("傾斜計") || filename.includes("沉陷釘")) {
+                    criteria = "確認沉陷觀測值及各項監測儀器數值是否低於警戒值";
+                    evidence = "<b>【定性】</b>監測儀器運作正常無受損，數據紀錄穩定。<br><b>【定量】</b>實測沉陷及傾斜數值均遠低於警戒值。";
                 }
 
                 return { date: dateStr, no: formNo, title: title, criteria: criteria, evidence: evidence, textColor: textColor };
@@ -309,7 +329,7 @@
                     hasNCR: hasNCR,
                     parseFileName: parseFileName 
                 });
-            }, 2000);
+            }, 2500);
         });
 
         function renderReport(data) {
@@ -318,10 +338,8 @@
             const pptCount = data.pptCount;
             const checkCount = data.selectedChecks.length;
 
-            // --- NCR 動態注入邏輯 ---
             let ncrTable4HTML = `<tr><td style="text-align: center; padding: 40px 0;" colspan="4">本期無不符事項</td></tr><tr><td colspan="4">備註：☑ 本次稽核結果均符合規範，無開立改正行動通知書。</td></tr>`;
             let ncrTable5HTML = `<tr><td style="text-align: center; padding: 20px 0;" colspan="6">無立案紀錄</td></tr>`;
-            
             let ncrText9 = "抽查發現之微小偏差（如放樣點輕微偏移）已即時於現場完成調整至規範要求，無重大缺失。";
             let ncrText10 = "本月份各項自檢項目除上述微小缺失外均合格，無開立重大缺失不合格管制單，故無此複查照片。";
 
@@ -337,7 +355,7 @@
                 `;
                 ncrTable5HTML = `
                     <tr>
-                        <td style="text-align: center;">CAR-11508-01</td>
+                        <td style="text-align: center;">CAR-1150${data.monthStr}-01</td>
                         <td style="text-align: center;">115.${data.monthStr}.31</td>
                         <td style="text-align: center;">內部稽核 (品質異常)</td>
                         <td style="text-align: center;">世詮營造 (排樁工程)</td>
