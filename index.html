@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豐譽營造 - 內部稽核自動化公文系統 V5.2</title>
+    <title>豐譽營造 - 內部稽核自動化公文系統 V5.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,6 +29,10 @@
             0% { background-color: #ccfbf1; border-color: #14b8a6; box-shadow: 0 0 0 2px #14b8a6; }
             100% { background-color: #f8fafc; border-color: #cbd5e1; box-shadow: none; }
         }
+        /* 拖曳狀態樣式 */
+        .drag-active { background-color: #e2e8f0 !important; border-color: #3b82f6 !important; border-style: solid !important; }
+        .drag-active-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; border-style: solid !important; }
+        .drag-active-teal { background-color: #ccfbf1 !important; border-color: #14b8a6 !important; border-style: solid !important; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -36,10 +40,10 @@
         <div class="max-w-screen-2xl mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-ranking-star text-2xl text-amber-500"></i>
-                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V5.2 邏輯除錯防禦版</span></h1>
+                <h1 class="text-xl font-bold tracking-wider">豐譽營造 <span class="text-slate-400 mx-2">|</span> 內部稽核自動化公文系統 <span class="text-xs bg-amber-500 text-slate-900 px-2 py-0.5 rounded ml-2 shadow-sm font-bold">V5.3 拖曳隔離精準版</span></h1>
             </div>
             <div class="text-sm bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700">
-                <i class="fa-solid fa-shield-cat mr-1"></i> 過濾機制與精準日曆
+                <i class="fa-solid fa-object-ungroup mr-1"></i> 獨立拖曳與精準辨識
             </div>
         </div>
     </header>
@@ -107,44 +111,63 @@
 
                 <h2 class="text-sm font-bold mb-3 text-slate-800 border-b pb-2"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i> 專案品質文件庫</h2>
                 
+                <!-- 自檢表區 -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
-                        <span><i class="fa-solid fa-file-circle-check mr-1"></i> 自主檢查表 (主分析)</span>
+                        <span><i class="fa-solid fa-file-circle-check mr-1"></i> 自主檢查表</span>
                         <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-check">0</span>
                     </h3>
-                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-2 text-center hover:bg-slate-50 relative cursor-pointer">
-                        <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <p class="text-[11px] text-slate-500">匯入自檢表</p>
+                    <div id="dropzone-check" class="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
+                        <input type="file" id="file-check" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <i class="fa-solid fa-cloud-arrow-up text-lg text-slate-400 group-hover:text-blue-500 mb-1 pointer-events-none"></i>
+                        <p class="text-[11px] text-slate-500 pointer-events-none font-medium">點擊或拖曳自檢表至此</p>
                     </div>
                     <div id="list-check" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
+                <!-- 缺失單區 -->
                 <div class="mb-3 relative">
                     <h3 class="text-xs font-bold text-red-700 mb-1 flex justify-between">
                         <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 缺失/矯正單 (NCR)</span>
                         <span class="bg-red-100 text-red-700 px-2 rounded-full text-[10px]" id="count-ncr">0</span>
                     </h3>
-                    <div class="border-2 border-dashed border-red-300 bg-red-50 rounded-lg p-2 text-center hover:bg-red-100 relative cursor-pointer">
-                        <input type="file" id="file-ncr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <p class="text-[11px] text-red-600 font-bold">匯入異常單 (系統自動立案)</p>
+                    <div id="dropzone-ncr" class="border-2 border-dashed border-red-300 bg-red-50 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
+                        <input type="file" id="file-ncr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <i class="fa-solid fa-cloud-arrow-up text-lg text-red-400 group-hover:text-red-600 mb-1 pointer-events-none"></i>
+                        <p class="text-[11px] text-red-600 font-bold pointer-events-none">點擊或拖曳異常單至此</p>
                     </div>
                     <div id="list-ncr" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
+                <!-- 施工日誌區 -->
                 <div class="mb-3 relative">
-                    <h3 class="text-xs font-bold text-teal-700 mb-1 flex justify-between">
-                        <span><i class="fa-solid fa-book mr-1"></i> 施工日誌 & 簡報</span>
-                        <span class="bg-teal-100 text-teal-700 px-2 rounded-full text-[10px]" id="count-log">0</span>
+                    <h3 class="text-xs font-bold text-slate-600 mb-1 flex justify-between">
+                        <span><i class="fa-solid fa-clipboard-list mr-1"></i> 施工日誌</span>
+                        <span class="bg-slate-200 text-slate-600 px-2 rounded-full text-[10px]" id="count-log">0</span>
                     </h3>
-                    <div class="border-2 border-dashed border-teal-300 bg-teal-50 rounded-lg p-2 text-center hover:bg-teal-100 relative cursor-pointer group">
-                        <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <p class="text-[11px] text-teal-700 font-bold group-hover:text-teal-800 transition-colors">上傳簡報將自動萃取進度</p>
+                    <div id="dropzone-log" class="border-2 border-dashed border-slate-300 rounded-lg p-2 text-center transition-colors relative cursor-pointer group">
+                        <input type="file" id="file-log" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <p class="text-[11px] text-slate-500 pointer-events-none font-medium">拖曳日誌至此</p>
                     </div>
                     <div id="list-log" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
                 </div>
 
+                <!-- 簡報區 (獨立分離) -->
+                <div class="mb-3 relative">
+                    <h3 class="text-xs font-bold text-teal-700 mb-1 flex justify-between">
+                        <span><i class="fa-solid fa-chalkboard-user mr-1"></i> 週/月會簡報</span>
+                        <span class="bg-teal-100 text-teal-700 px-2 rounded-full text-[10px]" id="count-ppt">0</span>
+                    </h3>
+                    <div id="dropzone-ppt" class="border-2 border-dashed border-teal-300 bg-teal-50 rounded-lg p-3 text-center transition-colors relative cursor-pointer group">
+                        <input type="file" id="file-ppt" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg text-teal-500 group-hover:text-teal-700 mb-1 pointer-events-none"></i>
+                        <p class="text-[11px] text-teal-700 font-bold pointer-events-none">拖曳簡報至此 (自動萃取參數)</p>
+                    </div>
+                    <div id="list-ppt" class="mt-1 space-y-1 max-h-20 overflow-y-auto"></div>
+                </div>
+
                 <button id="btn-verify" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center shadow-md border border-slate-600 transition-colors mt-2">
-                    <i class="fa-solid fa-magnifying-glass-chart mr-2 text-amber-400"></i> 第一階段：進入數據覆核
+                    <i class="fa-solid fa-magnifying-glass-chart mr-2 text-amber-400"></i> 進入數據覆核中心
                 </button>
             </div>
         </div>
@@ -172,10 +195,9 @@
             <div id="empty-state" class="flex flex-col items-center justify-center flex-grow text-slate-400 bg-slate-50">
                 <i class="fa-solid fa-shield-cat text-6xl mb-4 text-slate-300"></i>
                 <p class="text-lg font-medium text-slate-500">等待資料匯入與解析</p>
-                <p class="text-sm mt-2">點擊左側「進入數據覆核」即可自定義修改定量數據。</p>
+                <p class="text-sm mt-2">點擊左側「進入數據覆核中心」即可自定義修改定量數據。</p>
             </div>
 
-            <!-- 數據覆核表格 -->
             <div id="verification-center" class="hidden flex-col flex-grow bg-white overflow-hidden">
                 <div class="bg-amber-50 border-b border-amber-200 p-3 flex items-start">
                     <i class="fa-solid fa-circle-info text-amber-500 mt-0.5 mr-2"></i>
@@ -198,7 +220,6 @@
                 </div>
             </div>
 
-            <!-- Word 報告預覽區 -->
             <div id="report-preview" class="hidden flex-grow overflow-y-auto bg-slate-300 p-6">
                 <div id="report-content" class="bg-white p-12 shadow-lg mx-auto" style="max-w: 21cm; min-height: 29.7cm; font-family: '標楷體', 'MingLiU', serif;">
                 </div>
@@ -216,7 +237,8 @@
             }
         });
 
-        const files = { log: [], check: [], ncr: [] };
+        // 獨立四大分類
+        const files = { log: [], ppt: [], check: [], ncr: [] };
         let parsedDataCache = []; 
 
         function showToast(msg) {
@@ -226,20 +248,50 @@
             setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
-        function setupInput(type) {
-            document.getElementById(`file-${type}`).addEventListener('change', (e) => {
-                const newFiles = Array.from(e.target.files).map(f => ({ file: f, selected: true }));
-                files[type] = [...files[type], ...newFiles];
-                renderList(type);
-                
-                if (type === 'log') {
-                    const hasNewPPT = newFiles.some(f => f.file.name.includes('簡報') || f.file.name.includes('月報') || f.file.name.includes('會議'));
-                    if (hasNewPPT) {
-                        autoExtractParameters();
-                    }
-                }
-                e.target.value = ''; 
+        // --- 全新原生拖曳上傳引擎 ---
+        function setupDragAndDrop(type) {
+            const dropZone = document.getElementById(`dropzone-${type}`);
+            const fileInput = document.getElementById(`file-${type}`);
+            
+            // 決定高亮樣式
+            let hoverClass = 'drag-active';
+            if(type === 'ncr') hoverClass = 'drag-active-red';
+            if(type === 'ppt') hoverClass = 'drag-active-teal';
+
+            // 點擊上傳
+            fileInput.addEventListener('change', (e) => handleFiles(type, e.target.files));
+
+            // 拖曳事件
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add(hoverClass);
             });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove(hoverClass);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove(hoverClass);
+                handleFiles(type, e.dataTransfer.files);
+            });
+        }
+
+        function handleFiles(type, newFileList) {
+            const newFiles = Array.from(newFileList).map(f => ({ file: f, selected: true }));
+            files[type] = [...files[type], ...newFiles];
+            renderList(type);
+            
+            // 只要檔案進入 PPT 區，強制執行萃取
+            if (type === 'ppt' && newFiles.length > 0) {
+                autoExtractParameters();
+            }
+            document.getElementById(`file-${type}`).value = ''; 
         }
 
         function autoExtractParameters() {
@@ -261,7 +313,7 @@
                 el.classList.add('auto-extracted');
             });
             
-            showToast('✅ 系統已成功從上傳的「簡報」中自動萃取當月進度與天候數據！');
+            showToast('✅ 系統已成功從「簡報庫」中自動精準萃取當月進度與天候數據！');
         }
 
         function toggleFile(type, index) {
@@ -277,10 +329,16 @@
         function renderList(type) {
             const container = document.getElementById(`list-${type}`);
             document.getElementById(`count-${type}`).innerText = files[type].length;
+            
+            let iconColor = 'text-blue-600';
+            let bgStyle = 'border-slate-200';
+            if(type === 'ncr') { iconColor = 'text-red-600'; bgStyle = 'border-red-200 bg-red-50'; }
+            if(type === 'ppt') { iconColor = 'text-teal-600'; bgStyle = 'border-teal-200 bg-teal-50'; }
+
             container.innerHTML = files[type].map((item, i) => `
-                <div class="flex items-center justify-between bg-white px-2 py-1.5 rounded border ${item.selected ? (type==='ncr'?'border-red-200 bg-red-50':'border-slate-200') : 'border-slate-200 opacity-50'} shadow-sm mb-1">
+                <div class="flex items-center justify-between bg-white px-2 py-1.5 rounded border ${item.selected ? bgStyle : 'border-slate-200 opacity-50'} shadow-sm mb-1">
                     <div class="flex items-center space-x-2 overflow-hidden flex-grow">
-                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 ${type==='ncr'?'text-red-600':'text-teal-600'} rounded cursor-pointer">
+                        <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleFile('${type}', ${i})" class="form-checkbox h-3.5 w-3.5 ${iconColor} rounded cursor-pointer">
                         <span class="text-[11px] truncate text-slate-700" title="${item.file.name}">${item.file.name}</span>
                     </div>
                     <button onclick="removeFile('${type}', ${i})" class="text-slate-400 hover:text-red-500 ml-2">
@@ -290,7 +348,11 @@
             `).join('');
         }
 
-        setupInput('log'); setupInput('check'); setupInput('ncr');
+        // 初始化拖曳引擎
+        setupDragAndDrop('check');
+        setupDragAndDrop('ncr');
+        setupDragAndDrop('log');
+        setupDragAndDrop('ppt');
 
         document.getElementById('btn-download').addEventListener('click', function() {
             const monthStr = document.getElementById('audit-month').value;
@@ -332,7 +394,6 @@
             allFiles.forEach((fileObj, idx) => {
                 const filename = fileObj.file.name;
                 
-                // V5.2 核心 1：防護機制，過濾無關附件 (Garbage Filter)
                 let excludeFrom1056 = false;
                 const validKeywords = ["鋼筋", "模板", "放樣", "打除", "混凝土", "預拌", "植栽", "預壘樁", "排樁", "安全監測", "傾斜計", "沉陷釘", "CCP", "墊塊", "帽筋", "間距", "QA-"];
                 const hasValidKeyword = validKeywords.some(kw => filename.includes(kw));
@@ -342,7 +403,6 @@
                     excludeFrom1056 = true;
                 }
 
-                // V5.2 核心 2：彈性防偽標記 (無效值拒絕)
                 let dateStr = "依實際表單"; 
                 const dateMatch = filename.match(/115\d{4}/);
                 if (dateMatch) dateStr = `115.${dateMatch[0].substring(3, 5)}.${dateMatch[0].substring(5, 7)}`;
@@ -465,8 +525,6 @@
         function generateFinalReport() {
             const monthStr = document.getElementById('audit-month').value;
             const monthNum = parseInt(monthStr);
-            
-            // V5.2 核心 3：動態日曆演算法 (終結9月31日)
             const endDay = new Date(115 + 1911, monthNum, 0).getDate();
             
             let prevMonthNum = monthNum - 1;
@@ -485,10 +543,8 @@
                 director: document.getElementById('role-director').checked
             };
 
-            const selectedLogs = files.log.filter(item => item.selected);
-            const pptCount = selectedLogs.filter(f => f.file.name.includes("簡報") || f.file.name.includes("會議") || f.file.name.includes("月報")).length;
-            const logCount = selectedLogs.length - pptCount;
-            
+            const logCount = files.log.filter(item => item.selected).length;
+            const pptCount = files.ppt.filter(item => item.selected).length;
             const validCache = parsedDataCache.filter(item => !item.excludeFrom1056);
             const checkCount = validCache.length;
 
